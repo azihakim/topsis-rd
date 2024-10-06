@@ -13,18 +13,10 @@ class PenilaianController extends Controller
     public function index()
     {
         // Menyaring data penilaian berdasarkan tanggal
-        $penilaian = PenilaianDb::orderBy('periode_penilaian')->get();
-
-        // Mengelompokkan data berdasarkan tanggal penilaian
-        $groupedPenilaian = $penilaian->groupBy('periode_penilaian');
-
-        // Mengambil satu entri pertama dari setiap grup
-        $uniquePenilaian = $groupedPenilaian->map(function ($group) {
-            return $group->first();
-        });
+        $penilaian = PenilaianDb::orderBy('periode')->get();
 
         // Mengembalikan view dengan data yang telah disaring
-        return view('penilaian.index', compact('uniquePenilaian'));
+        return view('penilaian.index', compact('penilaian'));
     }
 
 
@@ -33,9 +25,14 @@ class PenilaianController extends Controller
         return view('penilaian.penilaian');
     }
 
-    public function show($periode_penilaian)
+    public function show($id)
     {
-        $penilaian = PenilaianDb::where('periode_penilaian', $periode_penilaian)->get();
-        return view('penilaian.show', compact('penilaian'));
+        $penilaian = PenilaianDb::find($id);
+
+        // Decode JSON yang tersimpan dalam kolom `data`
+        $data = json_decode($penilaian->data, true);
+
+        // Kirim data ke view
+        return view('penilaian.show', compact('data'));
     }
 }

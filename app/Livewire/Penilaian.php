@@ -2,601 +2,492 @@
 
 namespace App\Livewire;
 
-use App\Models\Karyawan;
 use App\Models\Kriteria;
-use App\Models\PenilaianDb;
-use App\Models\SubKriteria;
-use Carbon\Carbon;
+use App\Models\Penilaiandb;
+use App\Models\Umkm;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+use Dompdf\Dompdf;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
-use Livewire\Features\SupportConsoleCommands\Commands\Upgrade\ThirdPartyUpgradeNotice;
 
 class Penilaian extends Component
 {
-    public $karyawans;
-    public $id_karyawan = [];
-    public $nama_karyawan = [];
-    public $divisi_karyawan = [];
-    public $sub_kriteria = [];
-    public $tgl_penilaian = 'p';
-    public $bobot = [];
-    public $data_penilaian;
-    public $periode;
-    // public $ket_kehadiran = 'Benefit';
-    // public $ket_kinerja = 'Benefit';
-    // public $ket_tanggung_jawab = 'Benefit';
-    // public $ket_sikap = 'Benefit';
-
-    public $newBobot = [];
     public $step = 1;
-    public $hasil_akhir = [];
-    public $data_r = [];
-    public $data_y = [];
-    public $data_ap = [];
-    // public $apData = [];
-    public $data_am = [];
-    public $data_dp = [];
-    public $data_dm = [];
-    public $data_v = [];
-    public $kriteria_totals = [];
-    public $data_final = [];
+    public $umkms = [];
+    public $kriterias = [];
+    public $kriteriaPenilaian = [];
+    public $bobot = [];
+    public $kriteriaTypes = [
+        1 => 'benefit',
+        2 => 'benefit',
+        3 => 'benefit',
+        4 => 'benefit',
+        5 => 'benefit',
+        6 => 'cost'
+    ];
+    public $penilaianData = [];
 
+    public $tgl_penilaian = '';
 
 
     public function mount()
     {
-        $this->karyawans = Karyawan::all();
-        $this->sub_kriteria = SubKriteria::all();
-
-        foreach ($this->karyawans as $karyawan) {
-            $this->id_karyawan[$karyawan->id] = $karyawan->id;
-            $this->nama_karyawan[$karyawan->id] = $karyawan->nama;
-            $this->divisi_karyawan[$karyawan->id] = $karyawan->divisi;
-        }
+        $this->tgl_penilaian = Carbon::now()->format('Y-m-d');
+        $this->getDataAwal();
+        $this->getKriteriaPenilaian();
+        // dd($this->getKriteriaPenilaian());
     }
 
-    public function render()
+    public function getDataAwal()
     {
-        return view('livewire.penilaian', [
-            'data_y' => $this->data_y,
-        ]);
+        $this->umkms = Umkm::all();
+        $this->kriterias = Kriteria::all();
+        $this->bobot = Kriteria::pluck('bobot')->toArray();
     }
 
-
-    public function validateForm()
+    public function getKriteriaPenilaian()
     {
-        $isValid = true;
+        $kriteriaPenilaian = Kriteria::all();
 
-        foreach ($this->karyawans as $karyawan) {
-            foreach ($this->sub_kriteria as $subKriteria) {
-                $karyawanId = $karyawan->id;
-                $subKriteriaId = $subKriteria->id;
-                $namaSubKriteria = $subKriteria->nama_sub_kriteria;
-                // Check if the specific sub kriteria needs validation
-
-                // Check if the required field is empty or null
-                if (!isset($this->bobot[$karyawanId][$subKriteriaId]) || $this->bobot[$karyawanId][$subKriteriaId] === null || $this->bobot[$karyawanId][$subKriteriaId] === 0) {
-                    $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, $namaSubKriteria . ' harus diisi.');
-                    $isValid = false; // Set flag to false if there are validation errors
-                } elseif ($this->bobot[$karyawanId][$subKriteriaId] < 0) {
-                    $this->addError('bobot.' . $karyawanId . '.' . $subKriteriaId, $namaSubKriteria . ' tidak boleh bernilai negatif.');
-                    $isValid = false; // Set flag to false if there are validation errors
-                } else {
-                    $isValid = true;
-                }
-            }
-        }
-        foreach ($this->karyawans as $karyawan) {
-            foreach ($this->sub_kriteria as $item) {
-                // Lakukan perhitungan seperti yang ada di calculateMultiplication
-                // Ambil nilai dari input
-                if (isset($this->bobot[$karyawan->id][$item->id])) {
-                    $nilai = $this->bobot[$karyawan->id][$item->id];
-                } else {
-                    $nilai = 0;
-                }
-
-                // Inisialisasi $hasilPerkalian dengan nilai default
-                $hasilPerkalian = 0;
-
-                // Tentukan faktor perkalian berdasarkan nama sub kriteria
-                if ($item->nama_sub_kriteria === 'Tepat Waktu') {
-                    if ($nilai > 20) {
-                        $this->addError('bobot.' . $karyawan->id . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
-                        $isValid = false;
-                    } else {
-                        $hasilPerkalian = $nilai;
-                    }
-                } elseif ($item->nama_sub_kriteria === 'Total Jam Kerja') {
-                    if ($nilai > 150) {
-                        $this->addError('bobot.' . $karyawan->id . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
-                        $isValid = false;
-                    } else {
-                        $hasilPerkalian = $nilai;
-                    }
-                } elseif ($item->nama_sub_kriteria === 'Izin Kerja') {
-                    if ($nilai > 20) {
-                        $this->addError('bobot.' . $karyawan->id . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
-                        $isValid = false;
-                    } else {
-                        $hasilPerkalian = $nilai;
-                    }
-                } else {
-                    if ($nilai > $item->bobot) {
-                        $this->addError('bobot.' . $karyawan->id . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
-                        $isValid = false;
-                    } else {
-                        $hasilPerkalian = $nilai;
-                    }
-                }
-
-                // Simpan hasil perkalian (misalnya ke dalam array atau model sesuai kebutuhan)
-                $this->newBobot[$karyawan->id][$item->id] = $hasilPerkalian;
-            }
-        }
-
-        return $isValid;
+        $kriteriaPenilaianArray = $kriteriaPenilaian->toArray();
+        // dd($kriteriaPenilaianArray);
+        $this->kriteriaPenilaian = $kriteriaPenilaianArray;
+        return $this->kriteriaPenilaian;
     }
 
-    public function next()
+    public function getPenialaianList()
     {
-        $this->validateForm();
-        if (!$this->validateForm()) {
-            // Jika validasi gagal, kembalikan atau lakukan tindakan yang sesuai
-            return redirect()->back()->with('error', 'Ada kesalahan validasi. Silakan lengkapi semua input yang diperlukan.');
-        }
-        $this->simpan();
-        $this->step = 2;
-    }
+        // Inisialisasi array penilaian
+        $penilaianData = [];
 
-    public function simpan()
-    {
-
-        $this->calculateBobot();
-        $penilaianData = $this->preparePenilaianData();
-        $normalizedData = $this->normalizeData($penilaianData);
-        $yData = $this->dataY();
-        $apData = $this->calculateApData($yData);
-        $amData = $this->calculateAmData($yData);
-        $dpData = $this->calculateDpData($yData, $apData);
-        $dmData = $this->calculateDmData($yData, $amData);
-        $finalData = $this->calculateFinalData($dpData, $dmData);
-
-        $this->dataY();
-
-        // dd('finalData', $finalData);
-    }
-
-
-    protected function calculateBobot()
-    {
-        foreach ($this->karyawans as $karyawan) {
-            foreach ($this->sub_kriteria as $item) {
-                $nilai = $this->bobot[$karyawan->id][$item->id] ?? 0;
-                $hasilPerkalian = $this->calculateMultiplication($item, $nilai, $karyawan->id);
-                $this->bobot[$karyawan->id][$item->id] = $hasilPerkalian;
-            }
-        }
-    }
-
-    protected function calculateMultiplication($item, $nilai, $karyawanId)
-    {
-        $hasilPerkalian = 0;
-
-        switch ($item->nama_sub_kriteria) {
-            case 'Tepat Waktu':
-                if ($nilai > 20) {
-                    $this->addError('bobot.' . $karyawanId . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
-                } else {
-                    $hasilPerkalian = intval(($nilai * 0.015) * 100);
-                    $this->resetErrorBag('bobot.' . $karyawanId . '.' . $item->id);
-                }
-                break;
-
-            case 'Total Jam Kerja':
-                if ($nilai > 150) {
-                    $this->addError('bobot.' . $karyawanId . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
-                } else {
-                    $hasilPerkalian = intval(($nilai * 0.00267) * 100);
-                    $this->resetErrorBag('bobot.' . $karyawanId . '.' . $item->id);
-                }
-                break;
-
-            case 'Izin Kerja':
-                if ($nilai > 20) {
-                    $this->addError('bobot.' . $karyawanId . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
-                } else {
-                    $hasilPerkalian = intval(((20 - $nilai) * 0.015) * 100);
-                    $this->resetErrorBag('bobot.' . $karyawanId . '.' . $item->id);
-                }
-                break;
-
-            default:
-                if ($nilai > $item->bobot) {
-                    $this->addError('bobot.' . $karyawanId . '.' . $item->id, 'Penilaian harus tidak melebihi ' . $item->bobot . '.');
-                } else {
-                    $hasilPerkalian = intval($nilai * 1);
-                    $this->resetErrorBag('bobot.' . $karyawanId . '.' . $item->id);
-                }
-                break;
-        }
-
-        return $hasilPerkalian;
-    }
-
-    protected function preparePenilaianData()
-    {
-        $semuaPenilaian = [];
-        $kriteria_totals = [];
-
-        foreach ($this->karyawans as $karyawan) {
-            $penilaian = new PenilaianDb();
-            $penilaian->karyawan_id = $karyawan->id;
-            $penilaian->tgl_penilaian = $this->tgl_penilaian;
-            $bobotArray = $this->prepareBobotArray($karyawan);
-
-            foreach ($bobotArray as $kriteria => $subKriteria) {
-                $total = array_sum(array_filter($subKriteria, fn($key) => $key !== 'bobot_kriteria', ARRAY_FILTER_USE_KEY));
-                $bobotArray[$kriteria]['total'] = $total;
-
-                if (!isset($kriteria_totals[$kriteria])) {
-                    $kriteria_totals[$kriteria] = 0;
-                }
-                $kriteria_totals[$kriteria] += pow($total, 2);
-            }
-
-            $penilaian->data = json_encode(['bobot' => $bobotArray]);
-            array_push($semuaPenilaian, $penilaian);
-        }
-
-        return compact('semuaPenilaian', 'kriteria_totals');
-    }
-
-    protected function prepareBobotArray($karyawan)
-    {
-        $bobotArray = [];
-
-        foreach ($this->bobot[$karyawan->id] as $subKriteriaId => $bobot) {
-            $subKriteria = SubKriteria::find($subKriteriaId);
-            $namaKriteria = $subKriteria->kriteria->nama_kriteria;
-            $namaSubKriteria = $subKriteria->nama_sub_kriteria;
-
-            if (!isset($bobotArray[$namaKriteria])) {
-                $bobotArray[$namaKriteria] = [];
-            }
-
-            if (!isset($bobotArray[$namaKriteria]['bobot_kriteria'])) {
-                $bobotArray[$namaKriteria]['bobot_kriteria'] = $subKriteria->kriteria->bobot;
-            }
-
-            $bobotArray[$namaKriteria][$namaSubKriteria] = $bobot;
-        }
-
-        return $bobotArray;
-    }
-
-    protected function normalizeData($data)
-    {
-        $semuaPenilaian = $data['semuaPenilaian'];
-        $kriteria_totals = $data['kriteria_totals'];
-        $kriteria_sqrt = [];
-
-        foreach ($kriteria_totals as $kriteria => $total) {
-            $kriteria_sqrt[$kriteria] = sqrt($total);
-        }
-
-        $normalizedData = [];
-
-        foreach ($semuaPenilaian as $penilaian) {
-            $penilaianData = json_decode($penilaian['data'], true);
-            $normalizedBobots = [];
-
-            foreach ($penilaianData['bobot'] as $kriteria => $subKriteria) {
-                $total = isset($subKriteria['total']) ? $subKriteria['total'] : 0;
-                $normalizedTotal = $total / $kriteria_sqrt[$kriteria];
-
-                $normalizedBobots[$kriteria] = [
-                    'bobot_kriteria' => isset($subKriteria['bobot_kriteria']) ? $subKriteria['bobot_kriteria'] : 0,
-                    'total' => $total,
-                    'normalized_total' => $normalizedTotal,
-                ];
-            }
-
-            $nama_karyawan = $this->nama_karyawan[$penilaian['karyawan_id']];
-
-            $normalizedPenilaian = [
-                'karyawan_id' => $penilaian['karyawan_id'],
-                'nama_karyawan' => $nama_karyawan,
-                'tgl_penilaian' => $penilaian['tgl_penilaian'],
-                'bobot' => $normalizedBobots,
+        // Loop melalui umkms (pelanggan) yang ada
+        foreach ($this->umkms as $umkm) {
+            $umkm = Umkm::find($umkm['id']);
+            // Set pelanggan_id untuk penilaian
+            $penilaianData[$umkm['id']] = [
+                'umkm_id' => $umkm['id'],
+                'umkm_nama' => $umkm['nama'],
+                'kriteria' => [],
             ];
 
-            $normalizedData[] = $normalizedPenilaian;
-        }
-
-        $this->data_r = $normalizedData;
-        // dd('sss', $this->data_r);
-        // $this->data_y = $normalizedData;
-        return $this->data_r;
-    }
-
-    public function dataY()
-    {
-        $data_y = $this->data_r;
-        foreach ($data_y as &$item) {
-            foreach ($item['bobot'] as $kriteria => &$nilai) {
-                $nilai['normalized_total'] *= $nilai['bobot_kriteria'];
-            }
-        }
-        $this->data_y = $data_y;
-        // dd('data_y', $this->data_y);
-        return $this->data_y;
-    }
-
-    protected function calculateApData($yData)
-    {
-        // Initialize an empty array to store the results
-        $data_ap = [];
-
-        // Iterate over each employee's data
-        foreach ($yData as $penilaian) {
-            // Iterate over each criterion for the current employee
-            foreach ($penilaian['bobot'] as $kriteria => $details) {
-                // Fetch the criterion details from the database
-                $data_kriteria = Kriteria::where('nama_kriteria', $kriteria)->first();
-
-                // Check if the criterion is of type 'Benefit'
-                if ($data_kriteria && $data_kriteria->keterangan == 'Benefit') {
-                    // If this criterion does not exist in $data_ap, initialize it
-                    if (!isset($data_ap[$kriteria])) {
-                        $data_ap[$kriteria] = $details['normalized_total'];
-                    } else {
-                        // Calculate the minimum normalized total for 'Benefit' criteria
-                        $data_ap[$kriteria] = max($data_ap[$kriteria], $details['normalized_total']);
-                    }
-                } elseif ($data_kriteria && $data_kriteria->keterangan == 'Cost') {
-                    // If this criterion does not exist in $data_ap, initialize it
-                    if (!isset($data_ap[$kriteria])) {
-                        $data_ap[$kriteria] = $details['normalized_total'];
-                    } else {
-                        // Calculate the maximum normalized total for 'Cost' criteria
-                        $data_ap[$kriteria] = min($data_ap[$kriteria], $details['normalized_total']);
-                    }
-                }
-            }
-        }
-
-        $this->data_ap = $data_ap;
-        // dd('ap', $this->data_ap);
-
-        // Return the calculated data
-        return $this->data_ap;
-    }
-
-
-    protected function calculateAmData($yData)
-    {
-        // Initialize an empty array to store the results
-        $data_am = [];
-
-        // Iterate over each employee's data
-        foreach ($yData as $penilaian) {
-            // Iterate over each criterion for the current employee
-            foreach ($penilaian['bobot'] as $kriteria => $details) {
-                // Fetch the criterion details from the database
-                $data_kriteria = Kriteria::where('nama_kriteria', $kriteria)->first();
-
-                // Check if the criterion is of type 'Benefit'
-                if ($data_kriteria && $data_kriteria->keterangan == 'Benefit') {
-                    // If this criterion does not exist in $data_am, initialize it
-                    if (!isset($data_am[$kriteria])) {
-                        $data_am[$kriteria] = $details['normalized_total'];
-                    } else {
-                        // Calculate the minimum normalized total for 'Benefit' criteria
-                        $data_am[$kriteria] = min($data_am[$kriteria], $details['normalized_total']);
-                    }
-                } elseif ($data_kriteria && $data_kriteria->keterangan == 'Cost') {
-                    // If this criterion does not exist in $data_am, initialize it
-                    if (!isset($data_am[$kriteria])) {
-                        $data_am[$kriteria] = $details['normalized_total'];
-                    } else {
-                        // Calculate the maximum normalized total for 'Cost' criteria
-                        $data_am[$kriteria] = max($data_am[$kriteria], $details['normalized_total']);
-                    }
-                }
-            }
-        }
-        // dd($data_am);
-        $this->data_am = $data_am;
-        // Return the calculated data
-        return $this->data_am;
-    }
-
-
-
-    protected function calculateDpData($yData, $apData)
-    {
-        // Mengambil semua karyawan
-        foreach ($this->karyawans as $karyawan) {
-            $nama_karyawan[] = $karyawan->nama; // Menambahkan nama karyawan ke dalam array
-        }
-
-        $data_dp = $yData;
-
-        foreach ($this->karyawans as $karyawan['id'] => $karyawan) {
-            foreach ($data_dp as &$item) {
-                $total_kuadrat = 0;
-                foreach ($item['bobot'] as $kriteria => $detail_kriteria) {
-                    $total_kuadrat += pow($apData[$kriteria] - $detail_kriteria['total'], 2);
-                }
-                $item['total_kuadrat'] = sqrt($total_kuadrat);
-            }
-        }
-
-        $this->data_dp = $data_dp;
-        // dd('dp', $this->data_dp);
-        return $this->data_dp;
-    }
-
-    protected function calculateDmData($yData, $amData)
-    {
-        // Mengambil semua karyawan
-        foreach ($this->karyawans as $karyawan) {
-            $nama_karyawan[] = $karyawan->nama; // Menambahkan nama karyawan ke dalam array
-        }
-
-        $data_dm = $this->data_y;
-
-
-        foreach ($this->karyawans as $karyawan['id'] => $karyawan) {
-            foreach ($data_dm as &$item) {
-                $total_kuadrat = 0;
-                foreach ($item['bobot'] as $kriteria => $detail_kriteria) {
-                    $total_kuadrat += pow($amData[$kriteria] - $detail_kriteria['total'], 2);
-                }
-                $item['total_kuadrat'] = sqrt($total_kuadrat);
-            }
-        }
-
-        $this->data_dm = $data_dm;
-        // dd($this->data_dm);
-        return $this->data_dm;
-    }
-
-    protected function calculateFinalData($dpData, $dmData)
-    {
-        // Extract total_kuadrat values for DP and DM
-        $total_kuadrat_dp = array_column($dpData, 'total_kuadrat');
-        $total_kuadrat_dm = array_column($dmData, 'total_kuadrat');
-
-        // Initialize an array to store data_v values
-        $data_v = [];
-
-        // Iterate over each karyawan in the collection
-        foreach ($this->karyawans as $index => $karyawan) {
-            // Ensure the karyawan_id exists in the $total_kuadrat_dp and $total_kuadrat_dm arrays
-            if (isset($total_kuadrat_dp[$index]) && isset($total_kuadrat_dm[$index])) {
-                $total_dp = $total_kuadrat_dp[$index];
-                $total_dm = $total_kuadrat_dm[$index];
-
-                // Calculate the value of V for each karyawan
-                $value = ($total_dm + $total_dp != 0) ? $total_dm / ($total_dm + $total_dp) : 0;
-
-                // Append the result to the data_v array
-                $data_v[] = [
-                    'id_karyawan' => $karyawan->id,
-                    'nama_karyawan' => $karyawan->nama,
-                    'value' => $value
+            // Loop melalui kriteria penilaian
+            foreach ($this->kriteriaPenilaian as $kriteria) {
+                // Ambil nilai dari input yang dimodelkan dengan wire:model
+                $selectedBobot = $this->penilaianData[$umkm['id']][$kriteria['id']] ?? null;
+                // Masukkan ke dalam array penilaianData
+                $penilaianData[$umkm['id']]['kriteria'][$kriteria['id']] = [
+                    'kriteria_id' => $kriteria['id'],
+                    'nilai' => $selectedBobot, // Nilai yang diinput user
                 ];
             }
         }
 
-        // Sort the results by value in descending order to determine rank
-        usort($data_v, function ($a, $b) {
-            return $b['value'] <=> $a['value'];
-        });
+        // Set penilaianData menjadi array hasil
+        $this->penilaianData = $penilaianData;
 
-        // Add the rank to each karyawan
-        foreach ($data_v as $rank => &$item) {
-            $item['rank'] = $rank + 1;
-        }
-        // dd($data_v);
-        $this->data_final = $data_v;
-        // Return the final data
-        return $this->data_final;
+        // Return data penilaian untuk diproses lebih lanjut jika diperlukan
+        return $penilaianData;
     }
 
-
-    public function store()
+    function calculatePembagi($data, $jumlah_kriteria)
     {
-        $pdf = PDF::loadView('livewire.penilaian_pdf', [
-            'data_r' => $this->data_r,
-            'data_y' => $this->data_y,
-            'data_ap' => $this->data_ap,
-            'data_am' => $this->data_am,
-            'data_dp' => $this->data_dp,
-            'data_dm' => $this->data_dm,
-            'data_final' => $this->data_final,
-        ]);
+        // Inisialisasi array untuk menampung nilai pembagi tiap kriteria
+        $pembagi = array_fill(1, $jumlah_kriteria, 0);
 
-        // Simpan PDF ke storage
-        $path = 'pdf/' . $this->periode . '.pdf';
-        Storage::put($path, $pdf->output());
-
-        $semuaPenilaian = [];
-        foreach ($this->data_final as $hasil) {
-            // Cari ID karyawan berdasarkan nama karyawan
-            $nama_karyawan = $hasil['nama_karyawan'];
-            $karyawan = Karyawan::where('nama', $nama_karyawan)->first();
-
-            // Buat entri baru dalam PenilaianDb jika karyawan ditemukan
-
-            $penilaian = new PenilaianDb();
-            $penilaian->periode_penilaian = $this->periode; // Masukkan ID karyawan
-            $penilaian->nama_karyawan = $karyawan->nama; // Masukkan ID karyawan
-            $penilaian->tgl_penilaian = Carbon::now()->format('Y-m-d');
-            $penilaian->data = json_encode($hasil);
-            // dd($penilaian);
-            $penilaian->save();
-
-            $semuaPenilaian[] = $penilaian;
-        }
-        // $this->tgl_penilaian = $penilaian->tgl_penilaian;
-        // $this->cetakLaporan($semuaPenilaian);
-        return redirect()->route('penilaian.index');
-    }
-
-
-
-
-
-
-
-
-
-    public function back()
-    {
-        foreach ($this->karyawans as $karyawan) {
-            foreach ($this->sub_kriteria as $subKriteria) {
-                $karyawanId = $karyawan->id;
-                $subKriteriaId = $subKriteria->id;
-                $this->bobot[$karyawanId][$subKriteriaId];
+        // Loop melalui setiap pelanggan dan kumpulkan nilai kuadrat untuk setiap kriteria
+        foreach ($data as $pelanggan) {
+            foreach ($pelanggan['kriteria'] as $kriteria_id => $kriteria) {
+                // Tambahkan nilai kuadrat untuk kriteria tertentu
+                $pembagi[$kriteria_id] += pow($kriteria['nilai'], 2);
             }
         }
-        $this->step = 1;
+
+        // Hitung akar kuadrat dari penjumlahan kuadrat tiap kriteria
+        foreach ($pembagi as $kriteria_id => $total_nilai_kuadrat) {
+            $pembagi[$kriteria_id] = sqrt($total_nilai_kuadrat);
+        }
+
+        return $pembagi;
+    }
+    public function calculateMatriksTernormalisasi($penilaianData, $pembagi)
+    {
+        // Inisialisasi array untuk menampung matriks ternormalisasi
+        $matriksTernormalisasi = [];
+
+        // Iterasi melalui setiap pelanggan dan nilai kriteria mereka
+        foreach ($penilaianData as $umkm_id => $pelanggan) {
+            // Buat array untuk menyimpan nilai ternormalisasi dari pelanggan ini
+            $matriksTernormalisasi[$umkm_id] = [
+                'umkm_id' => $umkm_id,
+                'kriteria' => [],
+            ];
+
+            // Iterasi melalui setiap kriteria untuk pelanggan ini
+            foreach ($pelanggan['kriteria'] as $kriteria_id => $kriteria) {
+                $nilai = $kriteria['nilai'];
+
+                // Lakukan normalisasi nilai dengan membaginya oleh pembagi yang sesuai
+                $nilaiTernormalisasi = ($pembagi[$kriteria_id] != 0) ? $nilai / $pembagi[$kriteria_id] : 0;
+
+                // Simpan nilai yang sudah ternormalisasi
+                $matriksTernormalisasi[$umkm_id]['kriteria'][$kriteria_id] = [
+                    'kriteria_id' => $kriteria_id,
+                    'nilai_ternormalisasi' => $nilaiTernormalisasi,
+                ];
+            }
+        }
+
+        return $matriksTernormalisasi;
+    }
+    public function calculateMatriksTerbobot($matriksTernormalisasi, $bobot)
+    {
+        // Inisialisasi array untuk menyimpan matriks terbobot (Y)
+        $matriksTerbobot = [];
+
+        // Iterasi melalui setiap pelanggan
+        foreach ($matriksTernormalisasi as $umkm_id => $pelanggan) {
+            // Buat array untuk menyimpan nilai terbobot dari pelanggan ini
+            $matriksTerbobot[$umkm_id] = [
+                'umkm_id' => $umkm_id,
+                'kriteria' => [],
+            ];
+
+            // Iterasi melalui setiap kriteria untuk pelanggan ini
+            foreach ($pelanggan['kriteria'] as $kriteria_id => $kriteria) {
+                $nilaiTernormalisasi = $kriteria['nilai_ternormalisasi'];
+
+                // Pastikan indeks bobot ada dan cocok dengan kriteria_id
+                if (isset($bobot[$kriteria_id - 1])) {
+                    // Hitung nilai terbobot dengan mengalikan nilai ternormalisasi dengan bobot kriteria
+                    $nilaiTerbobot = $nilaiTernormalisasi * $bobot[$kriteria_id - 1];
+
+                    // Simpan nilai yang sudah terbobot
+                    $matriksTerbobot[$umkm_id]['kriteria'][$kriteria_id] = [
+                        'kriteria_id' => $kriteria_id,
+                        'nilai_terbobot' => $nilaiTerbobot,
+                    ];
+                }
+            }
+        }
+
+        return $matriksTerbobot;
     }
 
-
-
-
-
-    public function cetakLaporan($semuaPenilaian)
+    public function calculateSolusiIdealPositif($matriksTerbobot, $kriteriaTypes)
     {
-        // Ensure UTF-8 encoding for all strings
-        array_walk_recursive($semuaPenilaian, function (&$item, $key) {
+        // Inisialisasi array untuk menyimpan solusi ideal positif
+        $solusiIdealPositif = [];
+
+        // Iterasi setiap kriteria
+        foreach ($kriteriaTypes as $kriteria_id => $type) {
+            $nilaiKriteria = [];
+
+            // Ambil semua nilai terbobot untuk kriteria ini
+            foreach ($matriksTerbobot as $pelanggan) {
+                $nilaiKriteria[] = $pelanggan['kriteria'][$kriteria_id]['nilai_terbobot'];
+            }
+
+            // Jika tipe kriteria adalah 'benefit', ambil nilai maksimum
+            if ($type == 'benefit') {
+                $solusiIdealPositif[$kriteria_id] = max($nilaiKriteria);
+            }
+            // Jika tipe kriteria adalah 'cost', ambil nilai minimum
+            else if ($type == 'cost') {
+                $solusiIdealPositif[$kriteria_id] = min($nilaiKriteria);
+            }
+        }
+
+        return $solusiIdealPositif;
+    }
+    public function calculateSolusiIdealNegatif($matriksTerbobot, $kriteriaTypes)
+    {
+        // Inisialisasi array untuk menyimpan solusi ideal negatif
+        $solusiIdealNegatif = [];
+
+        // Iterasi setiap kriteria
+        foreach ($kriteriaTypes as $kriteria_id => $type) {
+            $nilaiKriteria = [];
+
+            // Ambil semua nilai terbobot untuk kriteria ini
+            foreach ($matriksTerbobot as $pelanggan) {
+                $nilaiKriteria[] = $pelanggan['kriteria'][$kriteria_id]['nilai_terbobot'];
+            }
+
+            // Jika tipe kriteria adalah 'benefit', ambil nilai minimum
+            if ($type == 'benefit') {
+                $solusiIdealNegatif[$kriteria_id] = min($nilaiKriteria);
+            }
+            // Jika tipe kriteria adalah 'cost', ambil nilai maksimum
+            else if ($type == 'cost') {
+                $solusiIdealNegatif[$kriteria_id] = max($nilaiKriteria);
+            }
+        }
+
+        return $solusiIdealNegatif;
+    }
+    public function calculateJarakSolusi($matriksTerbobot, $solusiIdealPositif, $solusiIdealNegatif)
+    {
+        // Inisialisasi array untuk menyimpan jarak solusi
+        $jarakSolusi = [];
+
+        // Iterasi melalui setiap alternatif (pelanggan)
+        foreach ($matriksTerbobot as $pelanggan_id => $pelanggan) {
+            $sumPositif = 0; // Untuk menyimpan penjumlahan kuadrat selisih ke solusi ideal positif
+            $sumNegatif = 0; // Untuk menyimpan penjumlahan kuadrat selisih ke solusi ideal negatif
+
+            // Iterasi setiap kriteria
+            foreach ($pelanggan['kriteria'] as $kriteria_id => $kriteria) {
+                // Ambil nilai terbobot
+                $nilaiTerbobot = $kriteria['nilai_terbobot'];
+
+                // Hitung selisih kuadrat dengan solusi ideal positif
+                $sumPositif += pow($nilaiTerbobot - $solusiIdealPositif[$kriteria_id], 2);
+
+                // Hitung selisih kuadrat dengan solusi ideal negatif
+                $sumNegatif += pow($nilaiTerbobot - $solusiIdealNegatif[$kriteria_id], 2);
+            }
+
+            // Hitung akar kuadrat dari penjumlahan kuadrat selisih
+            $jarakSolusi[$pelanggan_id] = [
+                'jarakPositif' => sqrt($sumPositif),
+                'jarakNegatif' => sqrt($sumNegatif),
+            ];
+        }
+
+        return $jarakSolusi;
+    }
+    public function calculatePreferensi($jarakSolusi)
+    {
+        $nilaiPreferensi = [];
+
+        foreach ($jarakSolusi as $pelanggan_id => $jarak) {
+            $jarakPositif = $jarak['jarakPositif'];
+            $jarakNegatif = $jarak['jarakNegatif'];
+
+            // Hitung nilai preferensi (V)
+            $nilaiPreferensi[$pelanggan_id] = $jarakNegatif / ($jarakPositif + $jarakNegatif);
+        }
+
+        return $nilaiPreferensi;
+    }
+
+    public function dataHasil()
+    {
+        $penilaianData = $this->getPenialaianList();
+        $pembagi = $this->calculatePembagi($penilaianData, count($this->kriteriaPenilaian));
+        $matriksTernormalisasi = $this->calculateMatriksTernormalisasi($penilaianData, $pembagi);
+        $matriksTerbobot = $this->calculateMatriksTerbobot($matriksTernormalisasi, $this->bobot);
+        $solusiIdealPositif = $this->calculateSolusiIdealPositif($matriksTerbobot, $this->kriteriaTypes);
+        $solusiIdealNegatif = $this->calculateSolusiIdealNegatif($matriksTerbobot, $this->kriteriaTypes);
+        $calculateJarakSolusi = $this->calculateJarakSolusi($matriksTerbobot, $solusiIdealPositif, $solusiIdealNegatif);
+        $nilaiPreferensi = $this->calculatePreferensi($calculateJarakSolusi);
+
+        $nilaiPreferensiDenganNama = [];
+        foreach ($nilaiPreferensi as $umkmId => $nilai) {
+            $umkm = Umkm::find($umkmId); // Ambil data UMKM dari model
+            $nilaiPreferensiDenganNama[] = [
+                'umkm_id' => $umkmId,
+                'nama_umkm' => $umkm->nama ?? 'Tidak Diketahui',
+                'nilai_preferensi' => $nilai
+            ];
+        }
+
+        foreach ($penilaianData as $key => $data) {
+            // Query untuk mendapatkan data UMKM berdasarkan umkm_id
+            $umkm = Umkm::find($data['umkm_id']);
+
+            // Tambahkan data UMKM ke array
+            if ($umkm) {
+                $penilaianData[$key]['umkm_nama'] = $umkm->nama;
+            }
+        }
+
+        // Loop melalui penilaianData untuk menambahkan kode kriteria
+        foreach ($penilaianData as &$umkmData) {
+            foreach ($umkmData['kriteria'] as $kriteria_id => &$kriteriaData) {
+                // Query untuk mendapatkan kode kriteria berdasarkan kriteria_id
+                $kriteria = Kriteria::find($kriteriaData['kriteria_id']);
+
+                // Jika kriteria ditemukan, tambahkan kode_kriteria ke dalam array
+                if ($kriteria) {
+                    $kriteriaData['kode_kriteria'] = $kriteria->kode;
+                }
+            }
+        }
+
+        // Loop melalui array pembagi dan tambahkan kode kriteria
+        foreach ($pembagi as $kriteria_id => $nilai_pembagi) {
+            // Query untuk mendapatkan kode kriteria berdasarkan kriteria_id
+            $kriteria = Kriteria::find($kriteria_id);
+
+            // Tambahkan kode kriteria ke array jika kriteria ditemukan
+            if ($kriteria) {
+                $pembagi[$kriteria_id] = [
+                    'nilai_pembagi' => $nilai_pembagi,
+                    'kode_kriteria' => $kriteria->kode,
+                ];
+            }
+        }
+
+        // Loop melalui array matriksTernormalisasi dan tambahkan nama UMKM serta kode kriteria
+        foreach ($matriksTernormalisasi as $umkm_key => $data) {
+            // Query untuk mendapatkan nama UMKM berdasarkan umkm_id
+            $umkm = Umkm::find($data['umkm_id']);
+
+            // Tambahkan nama UMKM jika ditemukan
+            if ($umkm) {
+                $matriksTernormalisasi[$umkm_key]['nama_umkm'] = $umkm->nama;
+            }
+
+            // Loop melalui kriteria untuk mendapatkan kode kriteria
+            foreach ($data['kriteria'] as $kriteria_key => $kriteria_data) {
+                $kriteria = Kriteria::find($kriteria_data['kriteria_id']);
+
+                // Tambahkan kode kriteria jika ditemukan
+                if ($kriteria) {
+                    $matriksTernormalisasi[$umkm_key]['kriteria'][$kriteria_key]['kode_kriteria'] = $kriteria->kode;
+                }
+            }
+        }
+
+        // Loop melalui array matriksTerbobot dan tambahkan nama UMKM serta kode kriteria
+        foreach ($matriksTerbobot as $umkm_key => $data) {
+            // Query untuk mendapatkan nama UMKM berdasarkan umkm_id
+            $umkm = Umkm::find($data['umkm_id']);
+
+            // Tambahkan nama UMKM jika ditemukan
+            if ($umkm) {
+                $matriksTerbobot[$umkm_key]['nama_umkm'] = $umkm->nama;
+            }
+
+            // Loop melalui kriteria untuk mendapatkan kode kriteria
+            foreach ($data['kriteria'] as $kriteria_key => $kriteria_data) {
+                $kriteria = Kriteria::find($kriteria_data['kriteria_id']);
+
+                // Tambahkan kode kriteria jika ditemukan
+                if ($kriteria) {
+                    $matriksTerbobot[$umkm_key]['kriteria'][$kriteria_key]['kode_kriteria'] = $kriteria->kode;
+                }
+            }
+        }
+
+        // Loop melalui solusiIdealPositif dan tambahkan kode kriteria
+        foreach ($solusiIdealPositif as $kriteria_id => $nilai) {
+            // Query untuk mendapatkan kode kriteria berdasarkan kriteria_id
+            $kriteria = Kriteria::find($kriteria_id);
+
+            // Tambahkan kode kriteria ke dalam array jika ditemukan
+            if ($kriteria) {
+                $solusiIdealPositif[$kriteria_id] = [
+                    'nilai' => $nilai,
+                    'kode_kriteria' => $kriteria->kode
+                ];
+            }
+        }
+
+        // Loop melalui solusiIdealNegatif dan tambahkan kode kriteria
+        foreach ($solusiIdealNegatif as $kriteria_id => $nilai) {
+            // Query untuk mendapatkan kode kriteria berdasarkan kriteria_id
+            $kriteria = Kriteria::find($kriteria_id);
+
+            // Tambahkan kode kriteria ke dalam array jika ditemukan
+            if ($kriteria) {
+                $solusiIdealNegatif[$kriteria_id] = [
+                    'nilai' => $nilai,
+                    'kode_kriteria' => $kriteria->kode
+                ];
+            }
+        }
+
+        // Loop melalui calculateJarakSolusi dan tambahkan nama UMKM
+        foreach ($calculateJarakSolusi as $umkm_id => $jarak) {
+            // Query untuk mendapatkan nama UMKM berdasarkan umkm_id
+            $umkm = Umkm::find($umkm_id);
+
+            // Tambahkan nama UMKM ke dalam array jika ditemukan
+            if ($umkm) {
+                $calculateJarakSolusi[$umkm_id]['nama_umkm'] = $umkm->nama;
+            }
+        }
+
+        // Sortir array berdasarkan nilai_preferensi dalam urutan menurun
+        usort($nilaiPreferensiDenganNama, function ($a, $b) {
+            return $b['nilai_preferensi'] <=> $a['nilai_preferensi'];
+        });
+
+        // Tambahkan ranking
+        foreach ($nilaiPreferensiDenganNama as $index => &$item) {
+            $item['ranking'] = $index + 1; // Ranking dimulai dari 1
+        }
+
+        // Ensure UTF-8 encoding for all strings in arrays
+        array_walk_recursive($penilaianData, function (&$item, $key) {
+            if (is_string($item)) {
+                $item = mb_convert_encoding($item, 'UTF-8');
+            }
+        });
+        array_walk_recursive($pembagi, function (&$item, $key) {
+            if (is_string($item)) {
+                $item = mb_convert_encoding($item, 'UTF-8');
+            }
+        });
+        array_walk_recursive($matriksTernormalisasi, function (&$item, $key) {
+            if (is_string($item)) {
+                $item = mb_convert_encoding($item, 'UTF-8');
+            }
+        });
+        array_walk_recursive($matriksTerbobot, function (&$item, $key) {
+            if (is_string($item)) {
+                $item = mb_convert_encoding($item, 'UTF-8');
+            }
+        });
+        array_walk_recursive($solusiIdealPositif, function (&$item, $key) {
+            if (is_string($item)) {
+                $item = mb_convert_encoding($item, 'UTF-8');
+            }
+        });
+        array_walk_recursive($solusiIdealNegatif, function (&$item, $key) {
+            if (is_string($item)) {
+                $item = mb_convert_encoding($item, 'UTF-8');
+            }
+        });
+        array_walk_recursive($calculateJarakSolusi, function (&$item, $key) {
+            if (is_string($item)) {
+                $item = mb_convert_encoding($item, 'UTF-8');
+            }
+        });
+        array_walk_recursive($nilaiPreferensiDenganNama, function (&$item, $key) {
             if (is_string($item)) {
                 $item = mb_convert_encoding($item, 'UTF-8');
             }
         });
 
-        $penilaian = $semuaPenilaian;
-        $content = Pdf::loadView('penilaian.cetakLaporan', compact('penilaian'));
-
-        // Set file name for the downloaded PDF
-        $filename = 'Hasil Penilaian ' . $this->tgl_penilaian . '.pdf';
-
-        return response()->streamDownload(
-            function () use ($content) {
-                echo $content->stream();
-            },
-            $filename
-        );
+        return [
+            'penilaianData' => $penilaianData,
+            'pembagi' => $pembagi,
+            'matriksTernormalisasi' => $matriksTernormalisasi,
+            'matriksTerbobot' => $matriksTerbobot,
+            'solusiIdealPositif' => $solusiIdealPositif,
+            'solusiIdealNegatif' => $solusiIdealNegatif,
+            'calculateJarakSolusi' => $calculateJarakSolusi,
+            'nilaiPreferensiDenganNama' => $nilaiPreferensiDenganNama,
+        ];
     }
 
-    public function cancel()
+    public function storeData()
     {
-        return redirect()->route('penilaian.create');
+        $data = $this->dataHasil();
+        Penilaiandb::create([
+            'periode' => $this->tgl_penilaian,
+            'data' => json_encode($data),
+        ]);
+
+        return redirect()->route('penilaian.index')->with('success', 'Data berhasil disimpan');
+    }
+
+    public function render()
+    {
+        return view('livewire.penilaian');
     }
 }

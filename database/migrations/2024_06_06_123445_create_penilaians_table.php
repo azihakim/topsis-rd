@@ -13,12 +13,8 @@ return new class extends Migration
     {
         Schema::create('penilaian_dbs', function (Blueprint $table) {
             $table->id();
-            // $table->unsignedBigInteger('karyawan_id');
-            // $table->foreign('karyawan_id');
-            $table->string('periode_penilaian');
-            $table->string('tgl_penilaian');
-            $table->string('nama_karyawan');
-            $table->text('data');
+            $table->string('periode');
+            $table->longText('data');
             $table->timestamps();
         });
     }

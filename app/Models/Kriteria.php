@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Kriteria extends Model
 {
     use HasFactory;
-    public function subkriteria()
+    public function subKriterias()
     {
         return $this->hasMany(SubKriteria::class);
     }

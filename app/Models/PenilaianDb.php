@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class PenilaianDb extends Model
 {
     use HasFactory;
+    protected $table = 'penilaian_dbs';
+    protected $fillable = ['periode', 'data'];
 }

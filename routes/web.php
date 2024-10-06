@@ -38,6 +38,9 @@ Route::get('/', [UmkmController::class, 'index'])->name('umkm.index');
 Route::get('/umkm-dashboard', [UmkmController::class, 'dashboard'])->name('umkm.dashboard');
 Route::get('/umkm/regist', [UmkmController::class, 'regist'])->name('umkm.regist');
 Route::get('/umkm/addUsaha', [UmkmController::class, 'addUsaha'])->name('umkm.addUsaha');
-Route::get('/umkm/storeUsaha', [UmkmController::class, 'storeUsaha'])->name('umkm.storeUsaha');
+Route::post('/umkm/storeUsaha', [UmkmController::class, 'storeUsaha'])->name('umkm.storeUsaha');
 Route::get('/umkm/regist/store', [UmkmController::class, 'storeRegist'])->name('umkm.storeRegist');
+
+Route::get('/umkm/detail/{id}', [UmkmController::class, 'umkmDetail'])->name('umkm.detail');
+
 require __DIR__ . '/auth.php';

@@ -7,7 +7,9 @@
 					<h3 class="card-title">Form Registrasi UMKM</h3>
 				</div>
 
-				<form action="{{ route('umkm.storeUsaha') }}" class="form-horizontal">
+				<!-- Update form to allow file upload -->
+				<form action="{{ route('umkm.storeUsaha') }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
+					@csrf <!-- Token CSRF untuk keamanan -->
 					<div class="card-body">
 						<h4>Identitas Usaha</h4>
 						<div class="row">
@@ -59,13 +61,28 @@
 									<input name="perizinan_usaha" type="text" class="form-control">
 								</div>
 							</div>
+
+							<!-- Input File Upload Proposal -->
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label>Proposal Usaha (PDF)</label>
+									<input name="proposal" type="file" class="form-control-file" accept=".pdf">
+								</div>
+							</div>
+
+							<!-- Input File Upload Legalitas Usaha -->
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label>Dokumen Legalitas (PDF)</label>
+									<input name="legalitas" type="file" class="form-control-file" accept=".pdf">
+								</div>
+							</div>
 						</div>
 					</div>
 
 					<div class="card-footer">
 						<button type="submit" class="btn btn-info float-right">Daftar</button>
 					</div>
-
 				</form>
 			</div>
 		</div>

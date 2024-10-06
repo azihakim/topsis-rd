@@ -11,6 +11,7 @@ use App\Models\SubKriteria;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -39,61 +40,108 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123'),
         ]);
 
-        $karyawan = [
+        DB::table('umkms')->insert([
             [
-                'nama' => 'Anwar Zemmi',
-                'divisi' => 'Kantor'
+                'user_id' => 1, // ID user dari tabel users
+                'status' => 'Cek Lapangan',
+                'nama' => 'Konveksi Kain Nusantara',
+                'email' => 'konveksi@nusantara.com',
+                'alamat' => 'Jl. Kain No. 15, Bandung',
+                'telepon' => '081298765432',
+                'legalitas' => 'TDP',
+                'nama_produk' => 'Seragam Sekolah',
+                'jenis_usaha' => 'Tekstil',
+                'perizinan_usaha' => 'Lengkap',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'nama' => 'Faisal Riza',
-                'divisi' => 'Lapangan'
+                'user_id' => 1, // ID user dari tabel users
+                'status' => 'Cek Administrasi',
+                'nama' => 'Café Kopi Nusantara',
+                'email' => 'kopi@nusantara.com',
+                'alamat' => 'Jl. Kopi No. 7, Surabaya',
+                'telepon' => '081234567891',
+                'legalitas' => 'SIUP',
+                'nama_produk' => 'Kopi Arabika',
+                'jenis_usaha' => 'Minuman',
+                'perizinan_usaha' => 'Lengkap',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'nama' => 'M. Lendra',
-                'divisi' => 'Kantor'
+                'user_id' => 1, // ID user dari tabel users
+                'status' => 'Cek Administrasi',
+                'nama' => 'Bengkel Motor Jaya',
+                'email' => 'bengkel@motorjaya.com',
+                'alamat' => 'Jl. Motor No. 20, Medan',
+                'telepon' => '081234567892',
+                'legalitas' => 'SIUP',
+                'nama_produk' => 'Servis Motor',
+                'jenis_usaha' => 'Otomotif',
+                'perizinan_usaha' => 'Lengkap',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'nama' => 'Nicolas Alex',
-                'divisi' => 'Lapangan'
+                'user_id' => 1, // ID user dari tabel users
+                'status' => 'Cek Lapangan',
+                'nama' => 'Toko Elektronik Maju',
+                'email' => 'elektronik@maju.com',
+                'alamat' => 'Jl. Elektronik No. 25, Semarang',
+                'telepon' => '081234567893',
+                'legalitas' => 'TDP',
+                'nama_produk' => 'Peralatan Elektronik',
+                'jenis_usaha' => 'Elektronik',
+                'perizinan_usaha' => 'Lengkap',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
-        ];
-
-        foreach ($karyawan as $k) {
-            Karyawan::create([
-                'nama' => $k['nama'],
-                'divisi' => $k['divisi'],
-            ]);
-        }
+            [
+                'user_id' => 1, // ID user dari tabel users
+                'status' => 'Cek Administrasi',
+                'nama' => 'Butik Fashion Modern',
+                'email' => 'butik@fashionmodern.com',
+                'alamat' => 'Jl. Fashion No. 30, Yogyakarta',
+                'telepon' => '081234567894',
+                'legalitas' => 'SIUP',
+                'nama_produk' => 'Pakaian Wanita',
+                'jenis_usaha' => 'Fashion',
+                'perizinan_usaha' => 'Lengkap',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+        ]);
 
         $kriteria = [
             [
                 'nama_kriteria' => 'Tujuan Mulia',
-                'bobot' => '10',
+                'bobot' => '0.1',
                 'keterangan' => 'Benefit'
             ],
             [
                 'nama_kriteria' => 'Produk',
-                'bobot' => '20',
+                'bobot' => '0.2',
                 'keterangan' => 'Benefit'
             ],
             [
                 'nama_kriteria' => 'Konsumen Potensial',
-                'bobot' => '20',
+                'bobot' => '0.2',
                 'keterangan' => 'Benefit'
             ],
             [
                 'nama_kriteria' => 'Pemasaran',
-                'bobot' => '20',
+                'bobot' => '0.2',
                 'keterangan' => 'Benefit'
             ],
             [
                 'nama_kriteria' => 'SDM',
-                'bobot' => '20',
+                'bobot' => '0.2',
                 'keterangan' => 'Benefit'
             ],
             [
                 'nama_kriteria' => 'Keuangan',
-                'bobot' => '10',
+                'bobot' => '0.1',
                 'keterangan' => 'Benefit'
             ],
         ];

@@ -13,17 +13,24 @@ return new class extends Migration
     {
         Schema::create('umkms', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('status')->default('Cek Administrasi');
-            $table->string('nama');
-            $table->string('email');
-            $table->string('alamat');
-            $table->string('telepon');
-            $table->string('legalitas');
-            $table->string('nama_produk');
-            $table->string('jenis_usaha');
-            $table->string('perizinan_usaha');
+            $table->string('nama')->nullable();
+            $table->string('email')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('telepon')->nullable();
+            $table->string('nib')->nullable();
+            $table->string('sertifikasi_halal')->nullable();
+            $table->string('hki')->nullable();
+            $table->string('pirt')->nullable();
+            $table->string('bpom')->nullable();
+            $table->string('sni')->nullable();
+            $table->string('proposal')->nullable();
+            $table->string('legalitas')->nullable();
+            $table->string('nama_produk')->nullable();
+            $table->string('jenis_usaha')->nullable();
+            $table->string('perizinan_usaha')->nullable();
             $table->timestamps();
         });
     }

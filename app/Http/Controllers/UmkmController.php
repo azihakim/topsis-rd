@@ -32,7 +32,22 @@ class UmkmController extends Controller
 
     public function storeUsaha(Request $request)
     {
-        // dd($request->all());
+
+        // Proses Upload File Proposal
+        if ($request->hasFile('proposal')) {
+            $proposalPath = $request->file('proposal')->store('proposals', 'public');
+        } else {
+            $proposalPath = null; // Jika tidak ada file yang di-upload
+        }
+
+        // Proses Upload File Legalitas
+        if ($request->hasFile('legalitas_file')) {
+            $legalitasPath = $request->file('legalitas_file')->store('legalitas', 'public');
+        } else {
+            $legalitasPath = null; // Jika tidak ada file yang di-upload
+        }
+
+        // Simpan data ke database
         $user = auth()->user()->id;
         Umkm::create([
             'user_id' => $user,
@@ -44,10 +59,13 @@ class UmkmController extends Controller
             'nama_produk' => $request->nama_produk,
             'jenis_usaha' => $request->jenis_usaha,
             'perizinan_usaha' => $request->perizinan_usaha,
+            'proposal' => $proposalPath, // Simpan path file proposal
+            'legalitas_file' => $legalitasPath,
         ]);
 
         return redirect()->route('umkm.dashboard')->with('success', 'Data berhasil disimpan');
     }
+
 
     public function storeRegist(Request $request)
     {
@@ -69,5 +87,11 @@ class UmkmController extends Controller
     {
         $data = Umkm::all();
         return view('umkm.dashboardAdmin', compact('data'));
+    }
+
+    public function umkmDetail($id)
+    {
+        $data = Umkm::find($id);
+        return view('umkm.detail', compact('data'));
     }
 }

@@ -40,7 +40,7 @@
 											<span class="sr-only">Toggle Dropdown</span>
 										</button>
 										<div class="dropdown-menu" role="menu">
-											<a href="${editUrl}" class="dropdown-item">Cek Administrasi</a>
+											<a href="{{ route('umkm.detail', $item->id) }}" class="dropdown-item">Detail</a>
 											<form action="${deleteUrl}" method="POST" style="display:inline;">
 												@csrf
 												@method('DELETE')
