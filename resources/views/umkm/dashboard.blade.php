@@ -27,11 +27,13 @@
 												<h2 class="lead"><b>{{ $item->nama }}</b></h2>
 												<p class="text-muted text-sm"><b>Status: </b>
 													@if ($item->status == 'Cek Administrasi')
-														<span class="badge badge-info">Cek Administrasi</span>
-													@elseif ($item->status == 'Di Tolak')
-														<span class="badge badge-danger">Di Tolak</span>
-													@elseif ($item->status == 'Di Setujui')
-														<span class="badge badge-success">Di Setujui</span>
+														<span class="badge badge-secondary">{{ $item->status }}</span>
+													@elseif ($item->status == 'Ditolak')
+														<span class="badge badge-danger">{{ $item->status }}</span>
+													@elseif ($item->status == 'Diterima')
+														<span class="badge badge-success">{{ $item->status }}</span>
+													@elseif ($item->status == 'Diproses')
+														<span class="badge badge-warning">{{ $item->status }}</span>
 													@endif
 												</p>
 												<ul class="ml-4 mb-0 fa-ul text-muted">
