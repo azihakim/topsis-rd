@@ -40,73 +40,72 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123'),
         ]);
 
-        DB::table('umkms')->insert([
-            [
-                'user_id' => 1, // ID user dari tabel users
-                'status' => 'Cek Lapangan',
-                'nama' => 'Konveksi Kain Nusantara',
-                'email' => 'konveksi@nusantara.com',
-                'alamat' => 'Jl. Kain No. 15, Bandung',
-                'telepon' => '081298765432',
-                'legalitas' => 'XX',
-                'nama_produk' => 'Seragam Sekolah',
-                'jenis_usaha' => 'Tekstil',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'user_id' => 1, // ID user dari tabel users
-                'status' => 'Cek Administrasi',
-                'nama' => 'Café Kopi Nusantara',
-                'email' => 'kopi@nusantara.com',
-                'alamat' => 'Jl. Kopi No. 7, Surabaya',
-                'telepon' => '081234567891',
-                'legalitas' => 'XX',
-                'nama_produk' => 'Kopi Arabika',
-                'jenis_usaha' => 'Minuman',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'user_id' => 1, // ID user dari tabel users
-                'status' => 'Cek Administrasi',
-                'nama' => 'Bengkel Motor Jaya',
-                'email' => 'bengkel@motorjaya.com',
-                'alamat' => 'Jl. Motor No. 20, Medan',
-                'telepon' => '081234567892',
-                'legalitas' => 'XX',
-                'nama_produk' => 'Servis Motor',
-                'jenis_usaha' => 'Otomotif',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'user_id' => 1, // ID user dari tabel users
-                'status' => 'Cek Lapangan',
-                'nama' => 'Toko Elektronik Maju',
-                'email' => 'elektronik@maju.com',
-                'alamat' => 'Jl. Elektronik No. 25, Semarang',
-                'telepon' => '081234567893',
-                'legalitas' => 'XX',
-                'nama_produk' => 'Peralatan Elektronik',
-                'jenis_usaha' => 'Elektronik',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'user_id' => 1, // ID user dari tabel users
-                'status' => 'Cek Administrasi',
-                'nama' => 'Butik Fashion Modern',
-                'email' => 'butik@fashionmodern.com',
-                'alamat' => 'Jl. Fashion No. 30, Yogyakarta',
-                'telepon' => '081234567894',
-                'legalitas' => 'XX',
-                'nama_produk' => 'Pakaian Wanita',
-                'jenis_usaha' => 'Fashion',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-        ]);
+        // DB::table('umkms')->insert([
+        //     [
+        //         'user_id' => 1, // ID user dari tabel users
+        //         'status' => 'Cek Administrasi',
+        //         'nama' => 'Konveksi Kain Nusantara',
+        //         'email' => 'konveksi@nusantara.com',
+        //         'alamat' => 'Jl. Kain No. 15, Bandung',
+        //         'telepon' => '081298765432',
+        //         'legalitas' => 'XX',
+        //         'nama_produk' => 'Seragam Sekolah',
+        //         'jenis_usaha' => 'Tekstil',
+        //         'created_at' => Carbon::now(),
+        //         'updated_at' => Carbon::now(),
+        //     ],
+        //     [
+        //         'user_id' => 1, // ID user dari tabel users
+        //         'status' => 'Cek Administrasi',
+        //         'nama' => 'Café Kopi Nusantara',
+        //         'email' => 'kopi@nusantara.com',
+        //         'alamat' => 'Jl. Kopi No. 7, Surabaya',
+        //         'telepon' => '081234567891',
+        //         'legalitas' => 'XX',
+        //         'nama_produk' => 'Kopi Arabika',
+        //         'jenis_usaha' => 'Minuman',
+        //         'created_at' => Carbon::now(),
+        //         'updated_at' => Carbon::now(),
+        //     ],
+        //     [
+        //         'user_id' => 1, // ID user dari tabel users
+        //         'status' => 'Cek Administrasi',
+        //         'nama' => 'Bengkel Motor Jaya',
+        //         'email' => 'bengkel@motorjaya.com',
+        //         'alamat' => 'Jl. Motor No. 20, Medan',
+        //         'telepon' => '081234567892',
+        //         'legalitas' => 'XX',
+        //         'nama_produk' => 'Servis Motor',
+        //         'jenis_usaha' => 'Otomotif',
+        //         'created_at' => Carbon::now(),
+        //         'updated_at' => Carbon::now(),
+        //     ],
+        //     [
+        //         'user_id' => 1, // ID user dari tabel users
+        //         'nama' => 'Toko Elektronik Maju',
+        //         'email' => 'elektronik@maju.com',
+        //         'alamat' => 'Jl. Elektronik No. 25, Semarang',
+        //         'telepon' => '081234567893',
+        //         'legalitas' => 'XX',
+        //         'nama_produk' => 'Peralatan Elektronik',
+        //         'jenis_usaha' => 'Elektronik',
+        //         'created_at' => Carbon::now(),
+        //         'updated_at' => Carbon::now(),
+        //     ],
+        //     [
+        //         'user_id' => 1, // ID user dari tabel users
+        //         'status' => 'Cek Administrasi',
+        //         'nama' => 'Butik Fashion Modern',
+        //         'email' => 'butik@fashionmodern.com',
+        //         'alamat' => 'Jl. Fashion No. 30, Yogyakarta',
+        //         'telepon' => '081234567894',
+        //         'legalitas' => 'XX',
+        //         'nama_produk' => 'Pakaian Wanita',
+        //         'jenis_usaha' => 'Fashion',
+        //         'created_at' => Carbon::now(),
+        //         'updated_at' => Carbon::now(),
+        //     ],
+        // ]);
 
         $kriteria = [
             [
