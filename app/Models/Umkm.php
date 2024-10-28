@@ -18,11 +18,16 @@ class Umkm extends Model
         'legalitas',
         'nama_produk',
         'jenis_usaha',
-        'perizinan_usaha',
+        'proposal',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function penilaians()
+    {
+        return $this->hasMany(PenilaianDb::class, 'umkm_id'); // Jika `umkm_id` ada di PenilaianDb
     }
 }

@@ -46,14 +46,14 @@
 										</div>
 									</div>
 									<div class="card-footer">
-										{{-- <div class="text-right">
-											<a href="#" class="btn btn-sm bg-teal">
+										<div class="text-right">
+											{{-- <a href="#" class="btn btn-sm bg-teal">
 												Edit
+											</a> --}}
+											<a href="{{ route('umkm.cetakPendaftaran', $item->id) }}" class="btn btn-sm btn-primary">
+												<i class="fas fa-print"></i> Cetak
 											</a>
-											<a href="#" class="btn btn-sm btn-primary">
-												<i class="fas fa-bullhorn"></i> Cek Status
-											</a>
-										</div> --}}
+										</div>
 									</div>
 								</div>
 							</div>

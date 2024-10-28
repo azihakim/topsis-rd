@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>PT INTI MEDIA SARANA MANDIRI </title>
+	<title>DINAS KOPERASI DAN UKM PROVINSI SUMATERA SELATAN</title>
 
 	<!-- Google Font: Source Sans Pro -->
 	<link rel="stylesheet"
@@ -64,9 +64,11 @@
 		<aside class="main-sidebar sidebar-dark-primary elevation-4">
 			<!-- Brand Logo -->
 			<a href="" class="brand-link">
-				<img src="{{ asset('vendors/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
+				{{-- <img src="{{ public_path('vendors/img/logo-palembang.png') }}" alt="Logo Palembang"> --}}
+
+				<img src="{{ asset('vendors/img/logo-provinsi.png') }}" alt="AdminLTE Logo"
 					class="brand-image img-circle elevation-3" style="opacity: 0.8" />
-				<span class="brand-text font-weight-light">PT IMSM</span>
+				<span class="brand-text font-weight-light">Penilaian UMKM</span>
 			</a>
 
 			<!-- Sidebar -->

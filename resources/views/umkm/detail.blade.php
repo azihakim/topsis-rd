@@ -43,9 +43,9 @@
 @section('content')
 	<div class="card">
 		<div class="card-header">
-			<h3 class="card-title">Penilaian</h3>
+			<h3 class="card-title">Detail UMKM</h3>
 			<div class="card-tools">
-				<a type="button" class="btn btn-tool" href="#">
+				<a type="button" class="btn btn-tool" href="{{ route('umkm.dashboardAdmin') }}">
 					<i class="fas fa-times"></i>
 				</a>
 			</div>
@@ -55,60 +55,69 @@
 				<div class="col-12 col-md-12 col-lg-7 order-1 order-md-1">
 					<div class="row">
 						<div class="col-12">
-							<h2><strong>Nama</strong> - Jabatan</h2>
+							<h2><strong>{{ $data->nama }}</strong> - {{ $data->jenis_usaha }}</h2>
 							<div class="post clearfix">
-								<p>Status Penilaian: <span class="right badge badge-danger">Belum Selesai</span>&nbsp;
-									<a href="#" id="ubah-status-link" class="link-black text-sm">
+								<p>Status: @if ($data->status == 'Cek Administrasi')
+										<span class="badge badge-secondary">{{ $data->status }}</span>
+									@elseif ($data->status == 'Ditolak')
+										<span class="badge badge-danger">{{ $data->status }}</span>
+									@elseif ($data->status == 'Diterima')
+										<span class="badge badge-success">{{ $data->status }}</span>
+									@elseif ($data->status == 'Diproses')
+										<span class="badge badge-warning">{{ $data->status }}</span>
+									@endif&nbsp;
+								<div class="dropdown">
+									<a href="#" id="ubah-status-link" class="link-black text-sm dropdown-toggle" data-toggle="dropdown"
+										aria-haspopup="true" aria-expanded="false">
 										<i class="fas fa-edit mr-1"></i> Ubah status
 									</a>
-									<br>
-									Tanggal Mulai Penilaian: 01 Januari 2023
-									<br>
-									Tanggal Berakhir Penilaian: 31 Desember 2023
-								</p>
-							</div>
-						</div>
-					</div>
-					<h4>Hasil Penilaian</h4>
-					<div class="row">
-						<div class="col-12 col-sm-3">
-							<div class="info-box bg-light">
-								<div class="info-box-content">
-									<span class="info-box-text text-center text-muted">TOTAL</span>
-									<span class="badge badge-danger">Cukup</span>
-									<span class="info-box-number text-center text-muted mb-0">1.00</span>
+									<div class="dropdown-menu" role="menu">
+										<form action="{{ route('umkm.status', $data->id) }}" method="POST" style="display:inline;">
+											@csrf
+											@method('PUT')
+											<input type="hidden" name="status" value="Ditolak">
+											<button class="dropdown-item" type="submit">Tolak</button>
+										</form>
+										<form action="{{ route('umkm.status', $data->id) }}" method="POST" style="display:inline;">
+											@csrf
+											@method('PUT')
+											<input type="hidden" name="status" value="Diterima">
+											<button class="dropdown-item" type="submit">Terima</button>
+										</form>
+										<form action="{{ route('umkm.status', $data->id) }}" method="POST" style="display:inline;">
+											@csrf
+											@method('PUT')
+											<input type="hidden" name="status" value="Diproses">
+											<button class="dropdown-item" type="submit">Proses</button>
+										</form>
+									</div>
 								</div>
+								<br>
+								Tanggal Pendaftaran: {{ $data->created_at->format('d F Y') }} <br>
+								Produk: {{ $data->nama_produk }} <br>
+								Legalitas: {{ $data->legalitas }} <br>
+								</p>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="col-12 col-md-12 col-lg-5 order-2 order-md-2">
 					<div class="text-muted">
-						<p class="text-sm">Sudah Melakukan Penilaian
+						<p class="text-sm">Alamat:
 						<div class="text-sm row" style="margin-top: -15px">
-							<div class="d-block col-sm-6">
-								<strong>Nama Penilai</strong> - Jabatan Penilai
-							</div>
-						</div>
-						</p>
-						<p class="text-sm">Belum Melakukan Penilaian
-						<div class="text-sm row" style="margin-top: -15px">
-							<div class="d-block col-sm-6">
-								<span class="right badge badge-warning">Tidak ada data</span>
+							<div class="d-block col-sm-12">
+								{{ $data->alamat }}
 							</div>
 						</div>
 						</p>
 					</div>
 					<div class="col-sm-12">
 						<div class="btn-group">
-							<a class="btn btn-sm btn-outline-success" id="detail-penilaian-btn"><i class="fas fa-edit"></i> Hasil
-								Penilaian</a>
-							<a target="_blank" href="#" class="btn btn-sm btn-outline-primary"><i class="fas fa-link"></i> Generate
-								Link</a>
-							<a target="_blank" href="#" class="btn btn-sm btn-outline-danger"><i class="fas fa-print"></i> Rekap Semua
-								Penilaian</a>
-							<a target="_blank" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#modal-default"><i
-									class="fas fa-exclamation-triangle"></i> Cara Penilaian</a>
+							<a class="btn btn-sm btn-outline-danger" href="{{ route('umkm.cetakPendaftaran', $data->id) }}"><i
+									class="fas fa-print"></i> Cetak Bukti
+								Pendaftaran</a>
+							<a class="btn btn-sm btn-outline-success" id="detail-penilaian-btn" target="_blank"
+								href="{{ Storage::url('proposals/' . $data->proposal) }}"><i class="fas fa-edit"></i> Proposal</a>
 							<div class="modal fade" id="modal-default">
 								<div class="modal-dialog">
 									<div class="modal-content">
@@ -160,7 +169,7 @@
 				</div>
 				<div>
 					<i class="fas fa-user bg-blue"></i>
-					<div class="timeline-item">
+					<div class="timeline-data">
 						<div class="timeline-header"><strong>Nama Penilai</strong> - Jabatan Penilai</div>
 						<div class="timeline-body">
 							<div class="table-responsive p-0">
@@ -245,10 +254,10 @@
 
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
-			const timelineItems = document.querySelectorAll('.timeline-item');
-			timelineItems.forEach(function(item) {
-				const header = item.querySelector('.timeline-header');
-				const body = item.querySelector('.timeline-body');
+			const timelineItems = document.querySelectorAll('.timeline-data');
+			timelineItems.forEach(function(data) {
+				const header = data.querySelector('.timeline-header');
+				const body = data.querySelector('.timeline-body');
 				body.style.maxHeight = '0';
 				header.addEventListener('click', function() {
 					if (body.classList.contains('open')) {

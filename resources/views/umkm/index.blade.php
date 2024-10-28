@@ -22,11 +22,13 @@
 									<td>{{ $u->jenis_usaha }}</td>
 									<td>
 										@if ($u->status == 'Cek Administrasi')
-											<span class="badge badge-info">Cek Administrasi</span>
-										@elseif ($u->status == 'Di Tolak')
-											<span class="badge badge-danger">Di Tolak</span>
-										@elseif ($u->status == 'Di Setujui')
-											<span class="badge badge-success">Di Setujui</span>
+											<span class="badge badge-secondary">{{ $u->status }}</span>
+										@elseif ($u->status == 'Ditolak')
+											<span class="badge badge-danger">{{ $u->status }}</span>
+										@elseif ($u->status == 'Diterima')
+											<span class="badge badge-success">{{ $u->status }}</span>
+										@elseif ($u->status == 'Diproses')
+											<span class="badge badge-warning">{{ $u->status }}</span>
 										@endif
 									</td>
 								</tr>

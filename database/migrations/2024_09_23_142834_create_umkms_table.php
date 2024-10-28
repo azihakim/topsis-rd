@@ -20,17 +20,10 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('alamat')->nullable();
             $table->string('telepon')->nullable();
-            $table->string('nib')->nullable();
-            $table->string('sertifikasi_halal')->nullable();
-            $table->string('hki')->nullable();
-            $table->string('pirt')->nullable();
-            $table->string('bpom')->nullable();
-            $table->string('sni')->nullable();
             $table->string('proposal')->nullable();
             $table->string('legalitas')->nullable();
             $table->string('nama_produk')->nullable();
             $table->string('jenis_usaha')->nullable();
-            $table->string('perizinan_usaha')->nullable();
             $table->timestamps();
         });
     }

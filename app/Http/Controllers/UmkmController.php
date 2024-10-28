@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Umkm;
 use App\Models\User;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 
 class UmkmController extends Controller
@@ -35,32 +36,29 @@ class UmkmController extends Controller
 
         // Proses Upload File Proposal
         if ($request->hasFile('proposal')) {
-            $proposalPath = $request->file('proposal')->store('proposals', 'public');
+            $namaUsaha = $request->nama;
+            $randomNumber = rand(100, 999);
+            $filename = "Proposal - {$namaUsaha} - {$randomNumber}." . $request->file('proposal')->getClientOriginalExtension();
+            $request->file('proposal')->storeAs('proposals', $filename, 'public');
         } else {
-            $proposalPath = null; // Jika tidak ada file yang di-upload
+            $filename = null; // Jika tidak ada file yang di-upload
         }
 
-        // Proses Upload File Legalitas
-        if ($request->hasFile('legalitas_file')) {
-            $legalitasPath = $request->file('legalitas_file')->store('legalitas', 'public');
-        } else {
-            $legalitasPath = null; // Jika tidak ada file yang di-upload
-        }
 
         // Simpan data ke database
         $user = auth()->user()->id;
+        $legalitas = $request->nama_legalitas . ' - ' . $request->legalitas;
+
         Umkm::create([
             'user_id' => $user,
             'nama' => $request->nama,
             'email' => $request->email,
             'alamat' => $request->alamat,
             'telepon' => $request->telepon,
-            'legalitas' => $request->legalitas,
+            'legalitas' => $legalitas,
             'nama_produk' => $request->nama_produk,
             'jenis_usaha' => $request->jenis_usaha,
-            'perizinan_usaha' => $request->perizinan_usaha,
-            'proposal' => $proposalPath, // Simpan path file proposal
-            'legalitas_file' => $legalitasPath,
+            'proposal' => $filename,
         ]);
 
         return redirect()->route('umkm.dashboard')->with('success', 'Data berhasil disimpan');
@@ -93,5 +91,22 @@ class UmkmController extends Controller
     {
         $data = Umkm::find($id);
         return view('umkm.detail', compact('data'));
+    }
+
+    public function umkmStatus($id, Request $request)
+    {
+        // dd($request->all());
+        $data = Umkm::find($id);
+        $data->status = $request->status;
+        $data->save();
+        return redirect()->back()->with('success', 'Data berhasil diubah');
+    }
+
+    public function cetakPendaftaran($id)
+    {
+        $data = Umkm::with('user')->find($id);
+        $pdf = app('dompdf.wrapper');
+        $pdf->loadView('cetak.pendaftaran', compact('data'));
+        return $pdf->download('hasil_pendaftaran_' . $data->id . '.pdf');
     }
 }

@@ -41,7 +41,7 @@ class Penilaian extends Component
 
     public function getDataAwal()
     {
-        $this->umkms = Umkm::all();
+        $this->umkms = Umkm::where('status', 'Diproses')->get();
         $this->kriterias = Kriteria::all();
         $this->bobot = Kriteria::pluck('bobot')->toArray();
     }

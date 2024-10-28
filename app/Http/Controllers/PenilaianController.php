@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PenilaianDb;
+use App\Models\Umkm;
 use Illuminate\Http\Request;
 
 class PenilaianController extends Controller
@@ -32,6 +33,10 @@ class PenilaianController extends Controller
         // Decode JSON yang tersimpan dalam kolom `data`
         $data = json_decode($penilaian->data, true);
 
+        // Ambil UMKM berdasarkan umkm_id di nilaiPreferensiDenganNama
+        foreach ($data['nilaiPreferensiDenganNama'] as &$preferensi) {
+            $preferensi['umkm'] = Umkm::find($preferensi['umkm_id']);
+        }
         // Kirim data ke view
         return view('penilaian.show', compact('data'));
     }

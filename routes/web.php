@@ -35,8 +35,10 @@ Route::get('/umkm-dashboardAdmin', [UmkmController::class, 'dashboardAdmin'])->n
 
 // Route::resource('umkm', UmkmController::class);
 Route::get('/', [UmkmController::class, 'index'])->name('umkm.index');
+Route::get('/cetak/{id}', [UmkmController::class, 'cetakPendaftaran'])->name('umkm.cetakPendaftaran');
 Route::get('/umkm-dashboard', [UmkmController::class, 'dashboard'])->name('umkm.dashboard');
 Route::get('/umkm/regist', [UmkmController::class, 'regist'])->name('umkm.regist');
+Route::put('/umkm/status/{id}', [UmkmController::class, 'umkmStatus'])->name('umkm.status');
 Route::get('/umkm/addUsaha', [UmkmController::class, 'addUsaha'])->name('umkm.addUsaha');
 Route::post('/umkm/storeUsaha', [UmkmController::class, 'storeUsaha'])->name('umkm.storeUsaha');
 Route::get('/umkm/regist/store', [UmkmController::class, 'storeRegist'])->name('umkm.storeRegist');

@@ -39,12 +39,6 @@
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
-									<label>Bentuk Legalitas</label>
-									<input name="legalitas" type="text" class="form-control">
-								</div>
-							</div>
-							<div class="col-sm-3">
-								<div class="form-group">
 									<label>Nama Merek Produk</label>
 									<input name="nama_produk" type="text" class="form-control">
 								</div>
@@ -53,12 +47,6 @@
 								<div class="form-group">
 									<label>Jenis Usaha</label>
 									<input name="jenis_usaha" type="text" class="form-control">
-								</div>
-							</div>
-							<div class="col-sm-3">
-								<div class="form-group">
-									<label>Perizinan Usaha</label>
-									<input name="perizinan_usaha" type="text" class="form-control">
 								</div>
 							</div>
 
@@ -70,13 +58,57 @@
 								</div>
 							</div>
 
-							<!-- Input File Upload Legalitas Usaha -->
-							<div class="col-sm-3">
+							<div class="col-sm-6">
 								<div class="form-group">
-									<label>Dokumen Legalitas (PDF)</label>
-									<input name="legalitas" type="file" class="form-control-file" accept=".pdf">
+									<label>Legalitas</label>
+									<div class="row">
+										<div class="col-sm-4">
+											<div class="custom-control custom-radio">
+												<input class="custom-control-input" type="radio" id="customRadio1" name="nama_legalitas" value="NIB">
+												<label for="customRadio1" class="custom-control-label">NIB</label>
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="custom-control custom-radio">
+												<input class="custom-control-input" type="radio" id="customRadio2" name="nama_legalitas"
+													value="Sertifikat Halal">
+												<label for="customRadio2" class="custom-control-label">Sertifikat Halal</label>
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="custom-control custom-radio">
+												<input class="custom-control-input" type="radio" id="customRadio3" name="nama_legalitas" value="HKI/Merk">
+												<label for="customRadio3" class="custom-control-label">HKI/Merk</label>
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="custom-control custom-radio">
+												<input class="custom-control-input" type="radio" id="customRadio4" name="nama_legalitas" value="PIRT">
+												<label for="customRadio4" class="custom-control-label">PIRT</label>
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="custom-control custom-radio">
+												<input class="custom-control-input" type="radio" id="customRadio5" name="nama_legalitas" value="BPOM">
+												<label for="customRadio5" class="custom-control-label">BPOM</label>
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="custom-control custom-radio">
+												<input class="custom-control-input" type="radio" id="customRadio6" name="nama_legalitas" value="SNI">
+												<label for="customRadio6" class="custom-control-label">SNI</label>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label>Nomor Legalitas</label>
+									<input name="legalitas" type="text" class="form-control">
+								</div>
+							</div>
+
 						</div>
 					</div>
 

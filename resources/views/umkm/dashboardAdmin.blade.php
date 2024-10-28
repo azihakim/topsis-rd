@@ -22,6 +22,7 @@
 					<tr>
 						<th>Nama Usaha</th>
 						<th>Pemilik Usaha</th>
+						<th>Status</th>
 						@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Direktur')
 							<th>Aksi</th>
 						@endif
@@ -32,6 +33,17 @@
 						<tr>
 							<td>{{ $item->nama }}</td>
 							<td>{{ $item->user->name }}</td>
+							<td>
+								@if ($item->status == 'Cek Administrasi')
+									<span class="badge badge-secondary">{{ $item->status }}</span>
+								@elseif ($item->status == 'Ditolak')
+									<span class="badge badge-danger">{{ $item->status }}</span>
+								@elseif ($item->status == 'Diterima')
+									<span class="badge badge-success">{{ $item->status }}</span>
+								@elseif ($item->status == 'Diproses')
+									<span class="badge badge-warning">{{ $item->status }}</span>
+								@endif
+							</td>
 							@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Direktur')
 								<td>
 									<div class="btn-group">
@@ -41,12 +53,24 @@
 										</button>
 										<div class="dropdown-menu" role="menu">
 											<a href="{{ route('umkm.detail', $item->id) }}" class="dropdown-item">Detail</a>
-											<form action="${deleteUrl}" method="POST" style="display:inline;">
+											<form action="{{ route('umkm.status', $item->id) }}" method="POST" style="display:inline;">
 												@csrf
-												@method('DELETE')
+												@method('PUT')
+												<input type="hidden" name="status" value="Ditolak">
 												<button class="dropdown-item" type="submit">Tolak</button>
 											</form>
-											<a href="${detailUrl}" class="dropdown-item">Terima</a>
+											<form action="{{ route('umkm.status', $item->id) }}" method="POST" style="display:inline;">
+												@csrf
+												@method('PUT')
+												<input type="hidden" name="status" value="Diterima">
+												<button class="dropdown-item" type="submit">Terima</button>
+											</form>
+											<form action="{{ route('umkm.status', $item->id) }}" method="POST" style="display:inline;">
+												@csrf
+												@method('PUT')
+												<input type="hidden" name="status" value="Diproses">
+												<button class="dropdown-item" type="submit">Proses</button>
+											</form>
 										</div>
 									</div>
 								</td>

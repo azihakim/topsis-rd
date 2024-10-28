@@ -8,7 +8,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>PT INTI MEDIA SARANA MANDIRI </title>
+	<title>DINAS KOPERASI DAN UKM PROVINSI SUMATERA SELATAN</title>
 
 	<!-- Google Font: Source Sans Pro -->
 	<link rel="stylesheet"
@@ -60,9 +60,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				<div class="collapse navbar-collapse order-3" id="navbarCollapse">
 					<!-- Left navbar links -->
 					<ul class="navbar-nav">
-						<li class="nav-item">
-							<a href="{{ route('umkm.regist') }}" class="nav-link">Registrasi</a>
-						</li>
+						@if (!Auth::check())
+							<li class="nav-item">
+								<a href="{{ route('umkm.regist') }}" class="nav-link">Registrasi</a>
+							</li>
+						@else
+							<li class="nav-item">
+								<a href="{{ route('umkm.dashboard') }}" class="nav-link">Dashboard</a>
+							</li>
+						@endif
 						@if (Auth::check())
 							<li class="nav-item">
 								<form method="POST" action="{{ route('logout') }}">
