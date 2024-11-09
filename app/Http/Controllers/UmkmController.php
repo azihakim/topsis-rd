@@ -33,7 +33,6 @@ class UmkmController extends Controller
 
     public function storeUsaha(Request $request)
     {
-
         // Proses Upload File Proposal
         if ($request->hasFile('proposal')) {
             $namaUsaha = $request->nama;
@@ -47,7 +46,7 @@ class UmkmController extends Controller
 
         // Simpan data ke database
         $user = auth()->user()->id;
-        $legalitas = $request->nama_legalitas . ' - ' . $request->legalitas;
+        // $legalitas = $request->nama_legalitas . ' - ' . $request->legalitas;
 
         Umkm::create([
             'user_id' => $user,
@@ -55,8 +54,7 @@ class UmkmController extends Controller
             'email' => $request->email,
             'alamat' => $request->alamat,
             'telepon' => $request->telepon,
-            'legalitas' => $legalitas,
-            'nama_produk' => $request->nama_produk,
+            'legalitas' => json_encode($request->nama_legalitas),
             'jenis_usaha' => $request->jenis_usaha,
             'proposal' => $filename,
         ]);

@@ -4,7 +4,7 @@
 	<div class="card">
 		<div class="card-header">
 			<h3 class="card-title">Data Penilaian</h3>
-			@if (Auth::user()->role != 'Karyawan')
+			@if (Auth::user()->role != 'Karyawan' && Auth::user()->role != 'Kabid')
 				<a href="{{ route('penilaian.create') }}" class="btn btn-primary float-right">Tambah Penilaian</a>
 			@endif
 		</div>

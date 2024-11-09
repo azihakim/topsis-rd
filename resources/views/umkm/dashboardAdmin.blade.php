@@ -23,7 +23,7 @@
 						<th>Nama Usaha</th>
 						<th>Pemilik Usaha</th>
 						<th>Status</th>
-						@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Direktur')
+						@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Kabid')
 							<th>Aksi</th>
 						@endif
 					</tr>
@@ -44,7 +44,7 @@
 									<span class="badge badge-warning">{{ $item->status }}</span>
 								@endif
 							</td>
-							@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Direktur')
+							@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Kabid')
 								<td>
 									<div class="btn-group">
 										<button type="button" class="btn btn-default dropdown-toggle fas fa-edit" data-toggle="dropdown"

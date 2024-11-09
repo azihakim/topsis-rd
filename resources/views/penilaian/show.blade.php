@@ -24,7 +24,7 @@
 						<th>Nilai Preferensi</th>
 						<th>Ranking</th>
 						<th>Status</th>
-						@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Direktur')
+						@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Kabid')
 							<th>Aksi</th>
 						@endif
 					</tr>
@@ -51,7 +51,7 @@
 								@endphp
 								<span class="badge {{ $badgeClass }}">{{ $status }}</span>
 							</td>
-							@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Direktur')
+							@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Kabid')
 								<td>
 									<div class="btn-group">
 										<button type="button" class="btn btn-default dropdown-toggle fas fa-edit" data-toggle="dropdown"

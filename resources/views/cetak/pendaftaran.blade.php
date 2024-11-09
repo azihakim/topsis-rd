@@ -105,21 +105,20 @@
 			<td>: {{ $data->email }}</td>
 		</tr>
 		<tr>
-			<th>Bentuk Legalitas</th>
-			<td>: {{ $data->legalitas }}</td>
-		</tr>
-		<tr>
-			<th>Nama Merek Produk</th>
-			<td>: {{ $data->nama_produk }}</td>
-		</tr>
-		<tr>
 			<th>Jenis Usaha</th>
 			<td>: {{ $data->jenis_usaha }}</td>
 		</tr>
 		<tr>
-			<th>Perizinan Usaha</th>
-			<td>: {{ $data->legalitas }}</td>
+			<th>Bentuk Legalitas</th>
+			<td>
+				<ul>
+					@foreach (json_decode($data->legalitas, true) as $legalitas)
+						<li>{{ $legalitas }}</li>
+					@endforeach
+				</ul>
+			</td>
 		</tr>
+
 	</table>
 
 	<div class="signature">

@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('telepon')->nullable();
             $table->string('proposal')->nullable();
             $table->string('legalitas')->nullable();
-            $table->string('nama_produk')->nullable();
             $table->string('jenis_usaha')->nullable();
             $table->timestamps();
         });

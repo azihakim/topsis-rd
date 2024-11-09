@@ -94,8 +94,13 @@
 								</div>
 								<br>
 								Tanggal Pendaftaran: {{ $data->created_at->format('d F Y') }} <br>
-								Produk: {{ $data->nama_produk }} <br>
-								Legalitas: {{ $data->legalitas }} <br>
+								Legalitas:
+								@foreach (json_decode($data->legalitas, true) as $index => $legalitas)
+									{{ $legalitas }}@if (!$loop->last)
+										,
+									@endif
+								@endforeach
+								<br>
 								</p>
 							</div>
 						</div>
@@ -113,9 +118,9 @@
 					</div>
 					<div class="col-sm-12">
 						<div class="btn-group">
-							<a class="btn btn-sm btn-outline-danger" href="{{ route('umkm.cetakPendaftaran', $data->id) }}"><i
+							{{-- <a class="btn btn-sm btn-outline-danger" href="{{ route('umkm.cetakPendaftaran', $data->id) }}"><i
 									class="fas fa-print"></i> Cetak Bukti
-								Pendaftaran</a>
+								Pendaftaran</a> --}}
 							<a class="btn btn-sm btn-outline-success" id="detail-penilaian-btn" target="_blank"
 								href="{{ Storage::url('proposals/' . $data->proposal) }}"><i class="fas fa-edit"></i> Proposal</a>
 							<div class="modal fade" id="modal-default">

@@ -16,37 +16,31 @@
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label>Nama Usaha</label>
-									<input name="nama" type="text" class="form-control">
+									<input required name="nama" type="text" class="form-control">
 								</div>
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label>Alamat Usaha</label>
-									<input name="alamat" type="text" class="form-control">
+									<input required name="alamat" type="text" class="form-control">
 								</div>
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label>Telepon Usaha</label>
-									<input name="telepon" type="text" class="form-control">
+									<input required name="telepon" type="text" class="form-control">
 								</div>
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label>Email</label>
-									<input name="email" type="email" class="form-control">
-								</div>
-							</div>
-							<div class="col-sm-3">
-								<div class="form-group">
-									<label>Nama Merek Produk</label>
-									<input name="nama_produk" type="text" class="form-control">
+									<input required name="email" type="email" class="form-control">
 								</div>
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label>Jenis Usaha</label>
-									<input name="jenis_usaha" type="text" class="form-control">
+									<input required name="jenis_usaha" type="text" class="form-control">
 								</div>
 							</div>
 
@@ -54,58 +48,50 @@
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label>Proposal Usaha (PDF)</label>
-									<input name="proposal" type="file" class="form-control-file" accept=".pdf">
+									<input required name="proposal" type="file" class="form-control-file" accept=".pdf">
 								</div>
 							</div>
 
 							<div class="col-sm-6">
 								<div class="form-group">
-									<label>Legalitas</label>
+									<label>Bentuk Legalitas</label>
 									<div class="row">
 										<div class="col-sm-4">
-											<div class="custom-control custom-radio">
-												<input class="custom-control-input" type="radio" id="customRadio1" name="nama_legalitas" value="NIB">
-												<label for="customRadio1" class="custom-control-label">NIB</label>
-											</div>
-										</div>
-										<div class="col-sm-4">
-											<div class="custom-control custom-radio">
-												<input class="custom-control-input" type="radio" id="customRadio2" name="nama_legalitas"
+											<div class="custom-control custom-checkbox">
+												<input class="custom-control-input" type="checkbox" id="customCheckbox2" name="nama_legalitas[]"
 													value="Sertifikat Halal">
-												<label for="customRadio2" class="custom-control-label">Sertifikat Halal</label>
+												<label for="customCheckbox2" class="custom-control-label">Sertifikat Halal</label>
 											</div>
 										</div>
 										<div class="col-sm-4">
-											<div class="custom-control custom-radio">
-												<input class="custom-control-input" type="radio" id="customRadio3" name="nama_legalitas" value="HKI/Merk">
-												<label for="customRadio3" class="custom-control-label">HKI/Merk</label>
+											<div class="custom-control custom-checkbox">
+												<input class="custom-control-input" type="checkbox" id="customCheckbox3" name="nama_legalitas[]"
+													value="HKI/Merk">
+												<label for="customCheckbox3" class="custom-control-label">HKI/Merk</label>
 											</div>
 										</div>
 										<div class="col-sm-4">
-											<div class="custom-control custom-radio">
-												<input class="custom-control-input" type="radio" id="customRadio4" name="nama_legalitas" value="PIRT">
-												<label for="customRadio4" class="custom-control-label">PIRT</label>
+											<div class="custom-control custom-checkbox">
+												<input class="custom-control-input" type="checkbox" id="customCheckbox4" name="nama_legalitas[]"
+													value="PIRT">
+												<label for="customCheckbox4" class="custom-control-label">PIRT</label>
 											</div>
 										</div>
 										<div class="col-sm-4">
-											<div class="custom-control custom-radio">
-												<input class="custom-control-input" type="radio" id="customRadio5" name="nama_legalitas" value="BPOM">
-												<label for="customRadio5" class="custom-control-label">BPOM</label>
+											<div class="custom-control custom-checkbox">
+												<input class="custom-control-input" type="checkbox" id="customCheckbox5" name="nama_legalitas[]"
+													value="BPOM">
+												<label for="customCheckbox5" class="custom-control-label">BPOM</label>
 											</div>
 										</div>
 										<div class="col-sm-4">
-											<div class="custom-control custom-radio">
-												<input class="custom-control-input" type="radio" id="customRadio6" name="nama_legalitas" value="SNI">
-												<label for="customRadio6" class="custom-control-label">SNI</label>
+											<div class="custom-control custom-checkbox">
+												<input class="custom-control-input" type="checkbox" id="customCheckbox6" name="nama_legalitas[]"
+													value="SNI">
+												<label for="customCheckbox6" class="custom-control-label">SNI</label>
 											</div>
 										</div>
 									</div>
-								</div>
-							</div>
-							<div class="col-sm-3">
-								<div class="form-group">
-									<label>Nomor Legalitas</label>
-									<input name="legalitas" type="text" class="form-control">
 								</div>
 							</div>
 

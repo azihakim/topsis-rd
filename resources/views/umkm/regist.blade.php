@@ -14,25 +14,25 @@
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label>Nama</label>
-									<input name="name" type="text" class="form-control">
+									<input required name="name" type="text" class="form-control">
 								</div>
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label>Domisili</label>
-									<input name="domisili" type="text" class="form-control">
+									<input required name="domisili" type="text" class="form-control">
 								</div>
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label>Nomor HP</label>
-									<input name="no_hp" type="text" class="form-control">
+									<input required name="no_hp" type="text" class="form-control">
 								</div>
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label>Email</label>
-									<input name="email" type="email" class="form-control">
+									<input required name="email" type="email" class="form-control">
 								</div>
 							</div>
 						</div>

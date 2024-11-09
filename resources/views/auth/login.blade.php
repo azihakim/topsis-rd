@@ -23,12 +23,17 @@
 		</div>
 	@endif
 
+	@if ($errors->has('username'))
+		<div class="alert alert-danger">
+			Username atau password salah
+		</div>
+	@endif
+
 	<div class="register-box">
 		<div class="card card-outline card-primary">
 			<div class="card-header text-center">
 				<img src="{{ asset('vendors/img/logo-provinsi.png') }}" alt="Logo Palembang">
 				<h6 style="margin-bottom: 1px"><strong>DINAS KOPERASI DAN UKM PROVINSI SUMATERA SELATAN</strong></h6>
-
 			</div>
 			<div class="card-body">
 				<p class="login-box-msg">Login</p>
@@ -36,49 +41,38 @@
 				<form action="{{ route('login') }}" method="post">
 					@csrf
 					<div class="input-group mb-3">
-						<input name="username" type="text" class="form-control" placeholder="Username">
+						<input name="username" type="text" class="form-control" placeholder="Username" required>
 						<div class="input-group-append">
 							<div class="input-group-text">
 								<span class="fas fa-user"></span>
 							</div>
 						</div>
-						{{-- <x-input-error :messages="$errors->get('email')" class="mt-2" /> --}}
-
 					</div>
 					<div class="input-group mb-3">
-						<input name="password" type="password" class="form-control" placeholder="Password">
+						<input name="password" type="password" class="form-control" placeholder="Password" required>
 						<div class="input-group-append">
 							<div class="input-group-text">
 								<span class="fas fa-lock"></span>
 							</div>
 						</div>
-						<x-input-error :messages="$errors->get('password')" class="mt-2" />
 					</div>
 
 					<div class="row">
 						<div class="col-12">
 							<button type="submit" class="btn btn-primary btn-block"><strong>Login</strong></button>
 						</div>
-						<!-- /.col -->
 					</div>
 				</form>
-				<br>
-				{{-- <a href="{{ route('register') }}" class="text-center">Klik untuk mendaftar calon karyawan!</a> --}}
-
-				{{-- <a href="{{ url('/regist-calonkaryawan') }}" class="text-center">Klik untuk mendaftar calon
-																				karyawan!</a> --}}
 			</div>
-			<!-- /.form-box -->
-		</div><!-- /.card -->
+		</div>
 	</div>
-	<!-- /.register-box -->
 
 	<!-- jQuery -->
 	<script src="{{ asset('vendors/plugins/jquery/jquery.min.js') }}"></script>
 	<!-- Bootstrap 4 -->
-	<script src="{{ 'vendors/plugins/bootstrap/js/bootstrap.bundle.min.js' }}"></script>
+	<script src="{{ asset('vendors/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 	<!-- AdminLTE App -->
-	<script src="{{ 'vendors/dist/js/adminlte.min.js' }}"></script>
+	<script src="{{ asset('vendors/dist/js/adminlte.min.js') }}"></script>
 </body>
 
 </html>

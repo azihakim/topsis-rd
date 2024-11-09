@@ -83,7 +83,7 @@
 								<p>Dashboard</p>
 							</a>
 						</li>
-						@if (Auth::user()->role != 'Karyawan')
+						@if (Auth::user()->role != 'Karyawan' && Auth::user()->role != 'Reviewer' && Auth::user()->role != 'Kabid')
 							<li class="nav-item">
 								<a href="{{ route('umkm.dashboardAdmin') }}" class="nav-link">
 									<i class="nav-icon fas fa-store-alt"></i>
@@ -100,6 +100,14 @@
 								<a href="{{ url('/subkriteria') }}" class="nav-link">
 									<i class="nav-icon fas fa-chart-pie"></i>
 									<p>Sub Kriteria</p>
+								</a>
+							</li>
+						@endif
+						@if (Auth::user()->role == 'Kabid')
+							<li class="nav-item">
+								<a href="{{ route('umkm.dashboardAdmin') }}" class="nav-link">
+									<i class="nav-icon fas fa-store-alt"></i>
+									<p>UMKM</p>
 								</a>
 							</li>
 						@endif

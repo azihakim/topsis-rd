@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('periode');
             $table->longText('data');
+            $table->string('status')->default('Belum Divalidasi');
             $table->timestamps();
         });
     }

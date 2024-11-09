@@ -16,7 +16,6 @@ class Umkm extends Model
         'alamat',
         'telepon',
         'legalitas',
-        'nama_produk',
         'jenis_usaha',
         'proposal',
     ];
