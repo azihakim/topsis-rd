@@ -16,9 +16,6 @@ use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         // \App\Models\User::factory(10)->create();
@@ -33,18 +30,21 @@ class DatabaseSeeder extends Seeder
             'username' => 'admin',
             'password' => Hash::make('123'),
         ]);
+
         User::create([
             'name' => 'Reviewer',
             'role' => 'Reviewer',
             'username' => 'reviewer',
             'password' => Hash::make('123'),
         ]);
+
         User::create([
             'name' => 'Kabid',
             'role' => 'Kabid',
             'username' => 'kabid',
             'password' => Hash::make('123'),
         ]);
+
         User::create([
             'name' => 'budi',
             'role' => 'umkm',
@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
 
         // DB::table('umkms')->insert([
         //     [
-        //         'user_id' => 1, // ID user dari tabel users
+        //         'user_id' => 1,
         //         'status' => 'Cek Administrasi',
         //         'nama' => 'Konveksi Kain Nusantara',
         //         'email' => 'konveksi@nusantara.com',
@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
         //         'updated_at' => Carbon::now(),
         //     ],
         //     [
-        //         'user_id' => 1, // ID user dari tabel users
+        //         'user_id' => 1,
         //         'status' => 'Cek Administrasi',
         //         'nama' => 'Café Kopi Nusantara',
         //         'email' => 'kopi@nusantara.com',
@@ -78,7 +78,7 @@ class DatabaseSeeder extends Seeder
         //         'updated_at' => Carbon::now(),
         //     ],
         //     [
-        //         'user_id' => 1, // ID user dari tabel users
+        //         'user_id' => 1,
         //         'status' => 'Cek Administrasi',
         //         'nama' => 'Bengkel Motor Jaya',
         //         'email' => 'bengkel@motorjaya.com',
@@ -90,7 +90,7 @@ class DatabaseSeeder extends Seeder
         //         'updated_at' => Carbon::now(),
         //     ],
         //     [
-        //         'user_id' => 1, // ID user dari tabel users
+        //         'user_id' => 1,
         //         'nama' => 'Toko Elektronik Maju',
         //         'email' => 'elektronik@maju.com',
         //         'alamat' => 'Jl. Elektronik No. 25, Semarang',
@@ -101,7 +101,7 @@ class DatabaseSeeder extends Seeder
         //         'updated_at' => Carbon::now(),
         //     ],
         //     [
-        //         'user_id' => 1, // ID user dari tabel users
+        //         'user_id' => 1,
         //         'status' => 'Cek Administrasi',
         //         'nama' => 'Butik Fashion Modern',
         //         'email' => 'butik@fashionmodern.com',
@@ -156,45 +156,106 @@ class DatabaseSeeder extends Seeder
         }
 
         $sub_kriteria = [
+            // Tujuan Mulia
             [
-                'nama_sub_kriteria' => 'Tepat Waktu',
-                'bobot' => '30',
-                'kriteria_id' => '1',
-            ],
-            [
-                'nama_sub_kriteria' => 'Total Jam Kerja',
+                'nama_sub_kriteria' => 'Kontribusi Sosial Tinggi',
                 'bobot' => '40',
                 'kriteria_id' => '1',
             ],
             [
-                'nama_sub_kriteria' => 'Izin Kerja',
+                'nama_sub_kriteria' => 'Kontribusi Sosial Baik',
                 'bobot' => '30',
                 'kriteria_id' => '1',
             ],
             [
-                'nama_sub_kriteria' => 'Inisiatif Karyawan',
+                'nama_sub_kriteria' => 'Kontribusi Sosial Cukup',
+                'bobot' => '30',
+                'kriteria_id' => '1',
+            ],
+
+            // Produk
+            [
+                'nama_sub_kriteria' => 'Sangat Berkualitas',
                 'bobot' => '50',
                 'kriteria_id' => '2',
             ],
             [
-                'nama_sub_kriteria' => 'Kolaborasi Karyawan',
-                'bobot' => '50',
+                'nama_sub_kriteria' => 'Berkualitas',
+                'bobot' => '30',
                 'kriteria_id' => '2',
             ],
             [
-                'nama_sub_kriteria' => 'Tanggung Jawab',
-                'bobot' => '100',
+                'nama_sub_kriteria' => 'Cukup Berkualitas',
+                'bobot' => '20',
+                'kriteria_id' => '2',
+            ],
+
+            // Konsumen Potensial
+            [
+                'nama_sub_kriteria' => 'Target Pasar Sangat Jelas',
+                'bobot' => '40',
                 'kriteria_id' => '3',
             ],
             [
-                'nama_sub_kriteria' => 'Komunikasi',
+                'nama_sub_kriteria' => 'Target Pasar Jelas',
+                'bobot' => '35',
+                'kriteria_id' => '3',
+            ],
+            [
+                'nama_sub_kriteria' => 'Target Pasar Cukup Jelas',
+                'bobot' => '25',
+                'kriteria_id' => '3',
+            ],
+
+            // Pemasaran
+            [
+                'nama_sub_kriteria' => 'Sangat Efektif',
                 'bobot' => '50',
                 'kriteria_id' => '4',
             ],
             [
-                'nama_sub_kriteria' => 'kejujuran',
-                'bobot' => '50',
+                'nama_sub_kriteria' => 'Efektif',
+                'bobot' => '30',
                 'kriteria_id' => '4',
+            ],
+            [
+                'nama_sub_kriteria' => 'Cukup Efektif',
+                'bobot' => '20',
+                'kriteria_id' => '4',
+            ],
+
+            // SDM
+            [
+                'nama_sub_kriteria' => 'Sangat Kompeten',
+                'bobot' => '50',
+                'kriteria_id' => '5',
+            ],
+            [
+                'nama_sub_kriteria' => 'Kompeten',
+                'bobot' => '30',
+                'kriteria_id' => '5',
+            ],
+            [
+                'nama_sub_kriteria' => 'Cukup Kompeten',
+                'bobot' => '20',
+                'kriteria_id' => '5',
+            ],
+
+            // Keuangan
+            [
+                'nama_sub_kriteria' => 'Sangat Baik',
+                'bobot' => '50',
+                'kriteria_id' => '6',
+            ],
+            [
+                'nama_sub_kriteria' => 'Baik',
+                'bobot' => '30',
+                'kriteria_id' => '6',
+            ],
+            [
+                'nama_sub_kriteria' => 'Cukup Baik',
+                'bobot' => '20',
+                'kriteria_id' => '6',
             ],
         ];
 
