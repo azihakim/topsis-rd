@@ -154,48 +154,52 @@ class KriteriaController extends Controller
      */
     public function destroy($id)
     {
-        // Temukan kriteria yang akan dihapus
-        $kriteria = Kriteria::find($id);
+        try {
+            // Temukan kriteria yang akan dihapus
+            $kriteria = Kriteria::find($id);
 
-        if ($kriteria) {
-            // Cek apakah kriteria memiliki relasi dengan tabel subkriteria
-            if ($kriteria->subkriteria()->count() > 0) {
-                return redirect()->route('kriteria.index')->with('error', 'Kriteria tidak bisa dihapus karena memiliki subkriteria terkait.');
-            }
-
-            // Dapatkan bobot dari kriteria yang akan dihapus
-            $bobotHapus = $kriteria->bobot;
-
-            // Hapus kriteria dari database
-            $kriteria->delete();
-
-            // Hitung total bobot semua kriteria yang tersisa
-            $totalBobotSisa = Kriteria::sum('bobot');
-
-            // Normalisasi bobot jika total bobot sisa kurang dari 100
-            if ($totalBobotSisa < 100) {
-                // Hitung selisih yang perlu ditambahkan
-                $selisih = 100 - $totalBobotSisa;
-
-                // Bagikan selisih kepada kriteria yang tersisa
-                $kriteriaSisa = Kriteria::all();
-                foreach ($kriteriaSisa as $kriteriaItem) {
-                    $bobotLama = $kriteriaItem->bobot;
-                    $bobotBaru = $bobotLama + ($bobotLama / $totalBobotSisa) * $selisih;
-
-                    // Pastikan bobot baru tidak lebih dari 100
-                    if ($bobotBaru > 100) {
-                        $bobotBaru = 100;
-                    }
-
-                    $kriteriaItem->bobot = $bobotBaru;
-                    $kriteriaItem->save();
+            if ($kriteria) {
+                // Cek apakah kriteria memiliki relasi dengan tabel subkriteria
+                if ($kriteria->subkriteria()->count() > 0) {
+                    return redirect()->route('kriteria.index')->with('error', 'Kriteria tidak bisa dihapus karena memiliki subkriteria terkait.');
                 }
-            }
 
-            return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil dihapus');
-        } else {
-            return redirect()->route('kriteria.index')->with('error', 'Kriteria tidak ditemukan');
+                // Dapatkan bobot dari kriteria yang akan dihapus
+                $bobotHapus = $kriteria->bobot;
+
+                // Hapus kriteria dari database
+                $kriteria->delete();
+
+                // Hitung total bobot semua kriteria yang tersisa
+                $totalBobotSisa = Kriteria::sum('bobot');
+
+                // Normalisasi bobot jika total bobot sisa kurang dari 100
+                if ($totalBobotSisa < 100) {
+                    // Hitung selisih yang perlu ditambahkan
+                    $selisih = 100 - $totalBobotSisa;
+
+                    // Bagikan selisih kepada kriteria yang tersisa
+                    $kriteriaSisa = Kriteria::all();
+                    foreach ($kriteriaSisa as $kriteriaItem) {
+                        $bobotLama = $kriteriaItem->bobot;
+                        $bobotBaru = $bobotLama + ($bobotLama / $totalBobotSisa) * $selisih;
+
+                        // Pastikan bobot baru tidak lebih dari 100
+                        if ($bobotBaru > 100) {
+                            $bobotBaru = 100;
+                        }
+
+                        $kriteriaItem->bobot = $bobotBaru;
+                        $kriteriaItem->save();
+                    }
+                }
+
+                return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil dihapus');
+            } else {
+                return redirect()->route('kriteria.index')->with('error', 'Kriteria tidak ditemukan');
+            }
+        } catch (\Exception $e) {
+            return redirect()->route('kriteria.index')->with('error', 'Terjadi kesalahan kriteria memiliki subkriteria terkait');
         }
     }
 }

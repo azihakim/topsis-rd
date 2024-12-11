@@ -1,11 +1,11 @@
 @extends('master')
-@section('title', 'Edit Pegawai')
+@section('title', 'Edit Sub Kriteria')
 @section('content')
     <div class="row">
         <div class="col-12">
             <div class="card card-warning">
                 <div class="card-header">
-                    <h3 class="card-title">Form Edit Pegawai</h3>
+                    <h3 class="card-title">Form Edit Sub Kriteria</h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->

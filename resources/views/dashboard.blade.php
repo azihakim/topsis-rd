@@ -76,7 +76,7 @@
 				button.addEventListener('click', function(event) {
 					event.preventDefault();
 					var id = this.getAttribute('data-id');
-					var confirmDelete = confirm('Apakah Anda yakin ingin menghapus pegawai ini?');
+					var confirmDelete = confirm('Apakah Anda yakin ingin menghapus data ini?');
 
 					if (confirmDelete) {
 						document.getElementById('deleteForm' + id).submit();

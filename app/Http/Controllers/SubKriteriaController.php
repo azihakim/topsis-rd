@@ -66,8 +66,12 @@ class SubKriteriaController extends Controller
      */
     public function destroy(string $id)
     {
-        $subkriteria = SubKriteria::find($id);
-        $subkriteria->delete();
-        return redirect()->route('subkriteria.index')->with('success', 'Sub Kriteria berhasil dihapus');
+        try {
+            $subkriteria = SubKriteria::find($id);
+            $subkriteria->delete();
+            return redirect()->route('subkriteria.index')->with('success', 'Sub Kriteria berhasil dihapus');
+        } catch (\Exception $e) {
+            return redirect()->route('subkriteria.index')->with('error', 'Terjadi kesalahan saat menghapus Sub Kriteria, Kriteria memiliki data terkait.');
+        }
     }
 }
