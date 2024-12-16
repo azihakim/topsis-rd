@@ -24,7 +24,7 @@
 						<th>Nilai Preferensi</th>
 						<th>Ranking</th>
 						<th>Status</th>
-						@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Kabid')
+						@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Reviewer' || Auth::user()->role == 'Kabid')
 							<th>Aksi</th>
 						@endif
 					</tr>
@@ -51,7 +51,7 @@
 								@endphp
 								<span class="badge {{ $badgeClass }}">{{ $status }}</span>
 							</td>
-							@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Kabid')
+							@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Reviewer' || Auth::user()->role == 'Kabid')
 								<td>
 									<div class="btn-group">
 										<button type="button" class="btn btn-default dropdown-toggle fas fa-edit" data-toggle="dropdown"
@@ -60,24 +60,32 @@
 										</button>
 										<div class="dropdown-menu" role="menu">
 											<a href="{{ route('umkm.detail', $item['umkm_id']) }}" class="dropdown-item">Detail</a>
-											<form action="{{ route('umkm.status', $item['umkm_id']) }}" method="POST" style="display:inline;">
-												@csrf
-												@method('PUT')
-												<input type="hidden" name="status" value="Ditolak">
-												<button class="dropdown-item" type="submit">Tolak</button>
-											</form>
-											<form action="{{ route('umkm.status', $item['umkm_id']) }}" method="POST" style="display:inline;">
-												@csrf
-												@method('PUT')
-												<input type="hidden" name="status" value="Diterima">
-												<button class="dropdown-item" type="submit">Terima</button>
-											</form>
-											<form action="{{ route('umkm.status', $item['umkm_id']) }}" method="POST" style="display:inline;">
-												@csrf
-												@method('PUT')
-												<input type="hidden" name="status" value="Diproses">
-												<button class="dropdown-item" type="submit">Proses</button>
-											</form>
+											@if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Kabid')
+												<form action="{{ route('umkm.status', $item['umkm_id']) }}" method="POST" style="display:inline;">
+													@csrf
+													@method('PUT')
+													<input type="hidden" name="status" value="Ditolak">
+													<button class="dropdown-item" type="submit">Tolak</button>
+												</form>
+												<form action="{{ route('umkm.status', $item['umkm_id']) }}" method="POST" style="display:inline;">
+													@csrf
+													@method('PUT')
+													<input type="hidden" name="status" value="Cek Administrasi">
+													<button class="dropdown-item" type="submit">Cek Administrasi</button>
+												</form>
+												<form action="{{ route('umkm.status', $item['umkm_id']) }}" method="POST" style="display:inline;">
+													@csrf
+													@method('PUT')
+													<input type="hidden" name="status" value="Diterima">
+													<button class="dropdown-item" type="submit">Terima</button>
+												</form>
+												<form action="{{ route('umkm.status', $item['umkm_id']) }}" method="POST" style="display:inline;">
+													@csrf
+													@method('PUT')
+													<input type="hidden" name="status" value="Diproses">
+													<button class="dropdown-item" type="submit">Proses</button>
+												</form>
+											@endif
 										</div>
 									</div>
 								</td>
