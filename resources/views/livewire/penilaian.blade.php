@@ -35,6 +35,13 @@
 								<input disabled type="text" class="form-control" value="{{ $umkm['jenis_usaha'] }}">
 							</div>
 						</div>
+						<div class="col-sm-2">
+							<div class="form-group">
+								<label>Cek Detail</label>
+								<a href="{{ route('umkm.detail', $umkm['id']) }}" class="btn btn-outline-info btn-block"
+									target="_blank">Detail</a>
+							</div>
+						</div>
 					</div>
 					<div class="row">
 						@foreach ($kriteriaPenilaian as $k)
